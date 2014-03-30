@@ -1,8 +1,6 @@
 package view;
 
 import java.awt.Color;
-import java.awt.EventQueue;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import javax.swing.border.TitledBorder;
 import model.ObjectType;
 import net.miginfocom.swing.MigLayout;
 
-public class Layout implements IGraphicLayout {
+public class Layout implements ILayout {
 
 	private JFrame frmComputerGraphics;
 	
@@ -33,29 +31,9 @@ public class Layout implements IGraphicLayout {
 	
 	private DefaultListModel<String> listObjects;
 	
-	public void addListenerController(IGraphicController listener) {
-		viewport.addListenerController(listener);
-	}
-	
-	public void addListenerLayout(IGraphicLayout listener) {
-		viewport.addListenerLayout(listener);
-	}
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Viewport viewport = new Viewport();
-					Layout window = new Layout(viewport);
-					window.frmComputerGraphics.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+    private ArrayList<IGraphicSystem> listeners = new ArrayList<>();
+	public void addListenerController(IGraphicSystem listener) {
+		listeners.add(listener);
 	}
 
 	/**
@@ -73,9 +51,10 @@ public class Layout implements IGraphicLayout {
 	private void initialize() {
 		frmComputerGraphics = new JFrame();
 		frmComputerGraphics.setTitle("Graphic System");
-		frmComputerGraphics.setBounds(100, 100, 800, 700);
+		// frmComputerGraphics.setBounds(100, 100, 800, 700);
 		frmComputerGraphics.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmComputerGraphics.getContentPane().setLayout(new MigLayout("", "[][grow]", "[][grow]"));
+		frmComputerGraphics.getContentPane().setLayout(new MigLayout("", "[][" + viewport.getHeight() + "px:n,grow]", "[][" + viewport.getWidth() + "px:n,grow]"));
+		// frmComputerGraphics.getContentPane().setLayout(new MigLayout("", "[][grow]", "[][grow]"));
 		
 		JPanel panelMenu = new JPanel();
 		frmComputerGraphics.getContentPane().add(panelMenu, "cell 0 1,grow");
@@ -151,66 +130,70 @@ public class Layout implements IGraphicLayout {
 		panelCoordinates.setBorder(new TitledBorder(null, "Coordinates", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelCoordinates.setLayout(new MigLayout("", "[][grow]", "[][][][]"));
 		
-		JPanel panel = new JPanel();
-		panel.setBorder(new TitledBorder(null, "Window", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelMenu.add(panel, "cell 0 2,growx,aligny bottom");
-		panel.setLayout(new MigLayout("", "[][][]", "[][][]"));
+		JPanel panelWindow = new JPanel();
+		panelWindow.setBorder(new TitledBorder(null, "Window", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelMenu.add(panelWindow, "cell 0 2,growx,aligny bottom");
+		panelWindow.setLayout(new MigLayout("", "[][][]", "[][][]"));
 		
 		JButton btnZoomOut = new JButton("");
 		btnZoomOut.setIcon(new ImageIcon("img/zoom-out-icon.png"));
-		panel.add(btnZoomOut, "cell 0 0");
+		panelWindow.add(btnZoomOut, "cell 0 0");
 		
 		JButton btnMoveUp = new JButton("");
 		btnMoveUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Point location = viewport.getLocation();
-				viewport.setLocation(location.x, --location.y);
+				for (IGraphicSystem listener: listeners) {
+					listener.moveUp();
+				}
 			}
 		});
 		btnMoveUp.setIcon(new ImageIcon("img/Arrows-Up-icon32.png"));
-		panel.add(btnMoveUp, "cell 1 0");
+		panelWindow.add(btnMoveUp, "cell 1 0");
 		
 		JButton btnZoomIn = new JButton("");
 		btnZoomIn.setIcon(new ImageIcon("img/zoom-in-icon.png"));
-		panel.add(btnZoomIn, "cell 2 0");
+		panelWindow.add(btnZoomIn, "cell 2 0");
 		
 		JButton btnMoveLeft = new JButton("");
 		btnMoveLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Point location = viewport.getLocation();
-				viewport.setLocation(--location.x, location.y);
+				
+				// TODO
+				
 			}
 		});
 		btnMoveLeft.setIcon(new ImageIcon("img/Arrows-Left-icon32.png"));
-		panel.add(btnMoveLeft, "cell 0 1");
+		panelWindow.add(btnMoveLeft, "cell 0 1");
 		
 		JButton btnMoveRight = new JButton("");
 		btnMoveRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Point location = viewport.getLocation();
-				viewport.setLocation(++location.x, location.y);
+				
+				// TODO
+				
 			}
 		});
 		btnMoveRight.setIcon(new ImageIcon("img/Arrows-Right-icon32.png"));
-		panel.add(btnMoveRight, "cell 2 1");
+		panelWindow.add(btnMoveRight, "cell 2 1");
 		
 		JButton btnTurnLeft = new JButton("");
 		btnTurnLeft.setIcon(new ImageIcon("img/Arrow-turn-left-icon.png"));
-		panel.add(btnTurnLeft, "cell 0 2");
+		panelWindow.add(btnTurnLeft, "cell 0 2");
 		
 		JButton btnMoveDown = new JButton("");
 		btnMoveDown.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Point location = viewport.getLocation();
-				viewport.setLocation(location.x, ++location.y);
+				
+				// TODO
+				
 			}
 		});
 		btnMoveDown.setIcon(new ImageIcon("img/Arrows-Down-icon32.png"));
-		panel.add(btnMoveDown, "cell 1 2");
+		panelWindow.add(btnMoveDown, "cell 1 2");
 		
 		JButton btnTurnRight = new JButton("");
 		btnTurnRight.setIcon(new ImageIcon("img/Arrow-turn-right-icon.png"));
-		panel.add(btnTurnRight, "cell 2 2");
+		panelWindow.add(btnTurnRight, "cell 2 2");
 		
 		JMenuBar menuBar = new JMenuBar();
 		frmComputerGraphics.setJMenuBar(menuBar);
@@ -225,12 +208,11 @@ public class Layout implements IGraphicLayout {
 		mnFile.add(mntmSave);
 		
 		frmComputerGraphics.setVisible(true);
-		
-		addListenerLayout(this);
+		frmComputerGraphics.pack();
 	}
 
 	@Override
-	public void createObject(String name) {
+	public void add(String name) {
 		listObjects.add(0, name);
 	}
 	

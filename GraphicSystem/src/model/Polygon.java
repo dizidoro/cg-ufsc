@@ -25,5 +25,11 @@ public class Polygon extends Geometry {
 	public void setVertices(ArrayList<Coordinate> vertices) {
 		this.vertices = vertices;
 	}
+
+	@Override
+	public void moveUp(double factor) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

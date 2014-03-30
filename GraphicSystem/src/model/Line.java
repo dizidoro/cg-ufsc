@@ -33,4 +33,15 @@ public class Line extends Geometry {
 	public void setB(Coordinate b) {
 		this.b = b;
 	}
+
+	@Override
+	public void moveUp(double factor) {
+		// Validando os links entre controller e view
+		
+		// Só um exemplo de uma transformação
+		a.setY(a.getY() - factor);
+		b.setY(b.getY() - factor);
+		
+	}
+	
 }

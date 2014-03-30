@@ -2,17 +2,19 @@ package controller;
 
 public class Window {
 	
-	private double xMin, yMin, xMax, yMax;
+	private double xMin, yMin, xMax, yMax, diagonal;
 	
 	Window(double xMin, double yMin, double xMax, double yMax) {
 		this.xMin = xMin;
 		this.yMin = yMin;
 		this.xMax = xMax;
 		this.yMax = yMax;
+		
+		// diagonal = UtilGraphicSystem.getDistance2Points(xMin, yMin, xMax, yMax);
 	}
 	
 	public void moveUp() {
-		// recalculo posição dos elementos da Display File
+		// Recálculo posição dos elementos da Display File
 		System.out.println("moveUp in");
 	}
 
@@ -48,4 +50,12 @@ public class Window {
 		this.yMax = yMax;
 	}
 
+	public double moveUp(double factor) {
+		// TODO
+		
+		// Isso é só um teste
+		yMin += factor;
+		yMax += factor;
+		return factor;
+	}
 }

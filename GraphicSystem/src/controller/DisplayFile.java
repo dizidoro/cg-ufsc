@@ -19,5 +19,17 @@ public class DisplayFile {
 	public void add(Geometry object) {
 		objects.add(object);
 	}
+
+	// Isso é mais teste de transformação
+	// acho que deve ser algo mais genérico
+	// e passar uma matriz para o display file
+	// não um fator.
+	public void moveUp(double factor) {
+		System.out.println("Calcula e armazena deslocamento de todos os objetos");
+		
+		for (Geometry object : objects) {
+			object.moveUp(factor);
+		}
+	}
 	
 }

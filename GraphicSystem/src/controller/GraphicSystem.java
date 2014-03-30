@@ -1,64 +1,53 @@
 package controller;
 
-import java.awt.EventQueue;
-import java.awt.List;
-
-import model.Coordinate;
-import model.Dot;
-import model.Line;
-import view.IGraphicController;
+import model.Geometry;
+import view.IGraphicSystem;
 import view.Layout;
 import view.Viewport;
 
-public class GraphicSystem implements IGraphicController {
+public class GraphicSystem implements IGraphicSystem {
 	
 	private Window window;
 	
 	private DisplayFile displayFile;
 	
 	private Viewport viewport;
+	
+	private Layout gui;
 
 	public GraphicSystem() {
-		double initX = 100;
-		double initY = 100;
+		// Dimensão inicial da window
+		double initX = 300;
+		double initY = 300;
 		
 		window = new Window(-initX, -initY, initX, initY);
+		viewport = new Viewport(-initX, -initY, initX, initY);
+		viewport.addListenerController(this);
 		displayFile = new DisplayFile();
-		viewport = new Viewport();
-		Layout gui = new Layout(viewport);
+		gui = new Layout(viewport);
 		gui.addListenerController(this);
 	}
-	
-	@Override
-	public String createDot(Coordinate coordinate) {
-		Dot dot = new Dot(coordinate);
-		return dot.getName();
-	}
-	
-	@Override
-	public String createLine(Coordinate a, Coordinate b) {
-		Line line = new Line(a, b);
-		return line.getName();
-	}
 
 	@Override
-	public String createPolygon(List coordinates) {
-		System.out.println("Polygon");
-		
-		// TODO Auto-generated method stub
-		
-		return null;
+	public void addNewObject(Geometry object) {
+		displayFile.add(object);
+		gui.add(object.getName());
 	}
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					new GraphicSystem();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+	
+	
+	@Override
+	public void moveUp() {
+		
+		// Vai expandir a window e ela vai me retornar uma fator
+		// para que eu possa aplicar sobre os objetos do DisplayFile
+		double factor = window.moveUp(10);
+		
+		// Calcula e armazena deslocamento de todos os objetos
+		displayFile.moveUp(factor);
+		
+		// Redesenha a lista de objetos atualizada
+		viewport.redraw(displayFile.getObjects());
+		
 	}
+	
 }
