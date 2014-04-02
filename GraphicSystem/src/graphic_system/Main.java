@@ -6,12 +6,12 @@ import graphic_system.view.Layout;
 import java.awt.EventQueue;
 
 public class Main {
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				GraphicSystem graphicSystem = new GraphicSystem();
-				Layout gui = new Layout(graphicSystem);
+				Layout gui = new Layout();
+				GraphicSystem graphicSystem = new GraphicSystem(gui);
 			}
 		});
 	}

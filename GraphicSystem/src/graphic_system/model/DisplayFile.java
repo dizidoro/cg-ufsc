@@ -6,7 +6,7 @@ import java.util.List;
 public class DisplayFile {
 
 	private List<Geometry> objects;
-	
+
 	public DisplayFile() {
 		this.objects = new ArrayList<Geometry>();
 	}
@@ -18,11 +18,12 @@ public class DisplayFile {
 	public void add(Geometry object) {
 		objects.add(object);
 	}
-	
-	public DisplayFile getViewportDisplayFile(Window window, Viewport viewport){
+
+	public DisplayFile getViewportDisplayFile(Window window, Viewport viewport) {
 		DisplayFile viewportDisplayFile = new DisplayFile();
-		for(Geometry object : objects){
-			Geometry viewportObject = object.getWindowViewportTransformation(window, viewport);
+		for (Geometry object : objects) {
+			Geometry viewportObject = object.getWindowViewportTransformation(
+					window, viewport);
 			viewportDisplayFile.add(viewportObject);
 		}
 		return viewportDisplayFile;

@@ -1,66 +1,87 @@
 package graphic_system.controller;
 
 import graphic_system.ApplicationConfig;
-import graphic_system.model.Coordinate;
 import graphic_system.model.DisplayFile;
-import graphic_system.model.Dot;
 import graphic_system.model.Geometry;
-import graphic_system.model.Line;
-import graphic_system.model.Polygon;
 import graphic_system.model.Viewport;
 import graphic_system.model.Window;
+import graphic_system.view.IGraphicSystem;
+import graphic_system.view.Layout;
 
 import java.util.List;
 
-//public class GraphicSystem implements IGraphicSystem{
-public class GraphicSystem {
-	
+public class GraphicSystem implements IGraphicSystem {
+
 	private final Viewport viewport;
 	private final Window window;
 	private final DisplayFile displayFile;
-	
-	public GraphicSystem(){
+	private final Layout gui;
+
+	public GraphicSystem(Layout gui) {
 		double xMin = ApplicationConfig.initXMin;
 		double yMin = ApplicationConfig.initYMin;
-		double xMax = ApplicationConfig.initXMax; 
+		double xMax = ApplicationConfig.initXMax;
 		double yMax = ApplicationConfig.initYMax;
-		
+
 		window = new Window(xMin, yMin, xMax, yMax);
 		viewport = new Viewport(xMin, yMin, xMax, yMax);
 		displayFile = new DisplayFile();
+		this.gui = gui;
+		this.gui.addListenerController(this);
 	}
-	
-	public void addNewObject(Geometry object){
-		Geometry transformed = object.getWindowViewportTransformation(window, viewport);
+
+	@Override
+	public void addNewObject(Geometry object) {
+		Geometry transformed = object.getWindowViewportTransformation(window,
+				viewport);
 		displayFile.add(transformed);
 	}
-	
-	public void zoomIn(){
+
+	@Override
+	public void zoomIn() {
 		window.zoomIn();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
 	}
-	
-	public void zoomOut(){
+
+	@Override
+	public void zoomOut() {
 		window.zoomOut();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
 	}
-	
-	public void moveUp(){
+
+	@Override
+	public void moveUp() {
 		window.moveUp();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
 	}
-	
-	public void moveDown(){
+
+	@Override
+	public void moveDown() {
 		window.moveDown();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
 	}
-	
-	public void moveRight(){
+
+	@Override
+	public void moveRight() {
 		window.moveRight();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
 	}
-	
-	public void moveLeft(){
+
+	@Override
+	public void moveLeft() {
 		window.moveLeft();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
 	}
-	
-	public List<Geometry> getObjects(){
-		return displayFile.getViewportDisplayFile(window, viewport).getObjects();
+
+	public List<Geometry> getObjects() {
+		return displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects();
 	}
-	
+
 }

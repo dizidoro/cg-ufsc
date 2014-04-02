@@ -1,8 +1,7 @@
 package graphic_system.model;
 
 public class Viewport {
-	private final double xMin, yMin, 
-				   		 xMax, yMax;
+	private final double xMin, yMin, xMax, yMax;
 
 	public Viewport(double xMin, double yMin, double xMax, double yMax) {
 		this.xMin = xMin;
@@ -10,10 +9,21 @@ public class Viewport {
 		this.xMax = xMax;
 		this.yMax = yMax;
 	}
-	
-	public double getXMin(){return xMin;}
-	public double getXMax(){return xMax;}
-	public double getYMin(){return yMin;}
-	public double getYMax(){return yMax;}
+
+	public double getXMin() {
+		return xMin;
+	}
+
+	public double getXMax() {
+		return xMax;
+	}
+
+	public double getYMin() {
+		return yMin;
+	}
+
+	public double getYMax() {
+		return yMax;
+	}
 
 }
