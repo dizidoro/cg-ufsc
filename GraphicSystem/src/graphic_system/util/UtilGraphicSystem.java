@@ -1,4 +1,4 @@
-package controller;
+package graphic_system.util;
 
 public class UtilGraphicSystem {
 	

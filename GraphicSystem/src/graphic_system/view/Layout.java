@@ -1,4 +1,8 @@
-package view;
+package graphic_system.view;
+
+import graphic_system.ApplicationConfig;
+import graphic_system.controller.GraphicSystem;
+import graphic_system.model.Geometry;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -20,10 +24,9 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import model.ObjectType;
-import net.miginfocom.swing.MigLayout;
+import net.miginfocom.swing.MigLayout;;
 
-public class Layout implements ILayout {
+public class Layout{
 
 	private JFrame frmComputerGraphics;
 	
@@ -31,17 +34,20 @@ public class Layout implements ILayout {
 	
 	private DefaultListModel<String> listObjects;
 	
-    private ArrayList<IGraphicSystem> listeners = new ArrayList<>();
-	public void addListenerController(IGraphicSystem listener) {
-		listeners.add(listener);
-	}
+	private final GraphicSystem graphicSystem;
+	
+//    private ArrayList<IGraphicSystem> listeners = new ArrayList<>();
+//	public void addListenerController(IGraphicSystem listener) {
+//		listeners.add(listener);
+//	}
 
 	/**
 	 * Create the application.
 	 * @param viewport 
 	 */
-	public Layout(Viewport viewport) {
-		this.viewport = viewport;
+	public Layout(GraphicSystem graphicSystem) {	
+		this.viewport = new Viewport(graphicSystem);
+		this.graphicSystem = graphicSystem;
 		initialize();
 	}
 
@@ -79,7 +85,7 @@ public class Layout implements ILayout {
 	                jToggleButton.setSelected(false);
 	            }
 	            tglbtnPencil.setSelected(true);
-	            viewport.setGraphicTool(ObjectType.DOT);
+	            viewport.setGraphicTool(Geometry.Type.POINT);
 	        }
 	    });
 		drawButtons.add(tglbtnPencil);
@@ -94,7 +100,7 @@ public class Layout implements ILayout {
 	                jToggleButton.setSelected(false);
 	            }
 	            tglbtnLine.setSelected(true);
-	            viewport.setGraphicTool(ObjectType.LINE);
+	            viewport.setGraphicTool(Geometry.Type.LINE);
 	        }
 	    });
 		drawButtons.add(tglbtnLine);
@@ -109,7 +115,7 @@ public class Layout implements ILayout {
 	                jToggleButton.setSelected(false);
 	            }
 	            tglbtnPolygon.setSelected(true);
-	            viewport.setGraphicTool(ObjectType.POLYGON);
+	            viewport.setGraphicTool(Geometry.Type.POLYGON);
 	        }
 	    });
 		drawButtons.add(tglbtnPolygon);
@@ -142,9 +148,7 @@ public class Layout implements ILayout {
 		JButton btnMoveUp = new JButton("");
 		btnMoveUp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				for (IGraphicSystem listener: listeners) {
-					listener.moveUp();
-				}
+				graphicSystem.moveUp();
 			}
 		});
 		btnMoveUp.setIcon(new ImageIcon("img/Arrows-Up-icon32.png"));
@@ -211,7 +215,6 @@ public class Layout implements ILayout {
 		frmComputerGraphics.pack();
 	}
 
-	@Override
 	public void add(String name) {
 		listObjects.add(0, name);
 	}
