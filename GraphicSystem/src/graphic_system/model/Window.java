@@ -59,23 +59,23 @@ public class Window {
 	}
 
 	public void moveUp() {
-		yMin -= moveDistance;
-		yMax -= moveDistance;
-	}
-
-	public void moveDown() {
 		yMin += moveDistance;
 		yMax += moveDistance;
 	}
 
+	public void moveDown() {
+		yMin -= moveDistance;
+		yMax -= moveDistance;
+	}
+
 	public void moveRight() {
-		xMin -= moveDistance;
-		xMax -= moveDistance;
+		xMin += moveDistance;
+		xMax += moveDistance;
 	}
 
 	public void moveLeft() {
-		xMin += moveDistance;
-		xMax += moveDistance;
+		xMin -= moveDistance;
+		xMax -= moveDistance;
 	}
 
 	@Override

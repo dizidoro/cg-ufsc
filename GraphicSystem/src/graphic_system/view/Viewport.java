@@ -106,7 +106,7 @@ public class Viewport extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 
-		// TODO: Criar op????????????o para configurar essas op????????????es
+		// TODO: Tornar isso configurável
 		Graphics2D g2d = (Graphics2D) g;
 		g.setColor(Color.BLACK);
 		g2d.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND,
