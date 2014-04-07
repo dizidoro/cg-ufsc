@@ -30,9 +30,7 @@ public class DisplayFile {
 	}
 
 	public Geometry getObject(String selected) {
-		System.err.println("Name: " + selected);
 		for (Geometry object : objects) {
-			System.err.println("FOR: " + object.getName());
 			if (object.getName().equals(selected)) {
 				return object;
 			}
