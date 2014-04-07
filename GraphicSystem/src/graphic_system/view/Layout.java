@@ -28,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
+import javax.swing.JRadioButton;
 
 public class Layout implements ILayout {
 
@@ -41,6 +42,8 @@ public class Layout implements ILayout {
 	private ArrayList<IGraphicSystem> listeners = new ArrayList<>();
 	private JTextField txtX;
 	private JTextField txtY;
+	private JTextField txtXRotation;
+	private JTextField txtYRotation;
 
 	public void addListenerController(IGraphicSystem listener) {
 		listeners.add(listener);
@@ -159,9 +162,9 @@ public class Layout implements ILayout {
 		panelObjects.add(scrollPaneList, "cell 0 0 2 1,grow");
 
 		JPanel panelTransformations = new JPanel();
-		panelObjects.add(panelTransformations, "cell 0 1 2 1,growx");
+		panelObjects.add(panelTransformations, "cell 0 1 2 1,growx,aligny center");
 		panelTransformations.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Transformations", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTransformations.setLayout(new MigLayout("", "[grow]", "[][grow]"));
+		panelTransformations.setLayout(new MigLayout("", "[grow]", "[][]"));
 		
 		JPanel panelTranslation = new JPanel();
 		panelTranslation.setBorder(new TitledBorder(null, "Translation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -195,7 +198,34 @@ public class Layout implements ILayout {
 		
 		JPanel panelRotation = new JPanel();
 		panelRotation.setBorder(new TitledBorder(null, "Rotation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTransformations.add(panelRotation, "cell 0 1,grow");
+		panelTransformations.add(panelRotation, "cell 0 1,growx,aligny top");
+		panelRotation.setLayout(new MigLayout("", "[]", "[][][][][]"));
+		
+		JRadioButton rdbtnCentroDoMundo = new JRadioButton("World center");
+		panelRotation.add(rdbtnCentroDoMundo, "cell 0 0");
+		
+		JRadioButton rdbtnObjectCenter = new JRadioButton("Object center");
+		panelRotation.add(rdbtnObjectCenter, "cell 0 1");
+		
+		JRadioButton rdbtnDot = new JRadioButton("Dot");
+		panelRotation.add(rdbtnDot, "flowx,cell 0 2");
+		
+		JButton btnApply = new JButton("Apply");
+		panelRotation.add(btnApply, "cell 0 3");
+		
+		JLabel lblXRotation = new JLabel("X:");
+		panelRotation.add(lblXRotation, "cell 0 2");
+		
+		txtXRotation = new JTextField();
+		panelRotation.add(txtXRotation, "cell 0 2");
+		txtXRotation.setColumns(10);
+		
+		JLabel lblYRotation = new JLabel("Y:");
+		panelRotation.add(lblYRotation, "cell 0 2");
+		
+		txtYRotation = new JTextField();
+		panelRotation.add(txtYRotation, "cell 0 2");
+		txtYRotation.setColumns(10);
 
 		JPanel panelWindow = new JPanel();
 		panelWindow.setBorder(new TitledBorder(null, "Window",
