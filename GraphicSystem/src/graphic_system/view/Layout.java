@@ -24,6 +24,10 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import net.miginfocom.swing.MigLayout;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class Layout implements ILayout {
 
@@ -32,8 +36,11 @@ public class Layout implements ILayout {
 	private Viewport viewport;
 
 	private DefaultListModel<String> listObjects;
+	private JList<String> jListObjects;
 
 	private ArrayList<IGraphicSystem> listeners = new ArrayList<>();
+	private JTextField txtX;
+	private JTextField txtY;
 
 	public void addListenerController(IGraphicSystem listener) {
 		listeners.add(listener);
@@ -138,15 +145,57 @@ public class Layout implements ILayout {
 		panelObjects.setLayout(new MigLayout("", "[grow][grow]", "[grow][]"));
 
 		listObjects = new DefaultListModel<String>();
-		JList<String> jListObjects = new JList<String>(listObjects);
+		jListObjects = new JList<String>(listObjects);
+		jListObjects.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				String selected = jListObjects.getSelectedValue();
+				for (IGraphicSystem listener : listeners) {
+					listener.getCenter(selected);
+				}
+			}
+		});
+
 		JScrollPane scrollPaneList = new JScrollPane(jListObjects);
 		panelObjects.add(scrollPaneList, "cell 0 0 2 1,grow");
 
-		JPanel panelCoordinates = new JPanel();
-		panelObjects.add(panelCoordinates, "cell 0 1 2 1,growx");
-		panelCoordinates.setBorder(new TitledBorder(null, "Coordinates",
-				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelCoordinates.setLayout(new MigLayout("", "[][grow]", "[][][][]"));
+		JPanel panelTransformations = new JPanel();
+		panelObjects.add(panelTransformations, "cell 0 1 2 1,growx");
+		panelTransformations.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Transformations", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTransformations.setLayout(new MigLayout("", "[grow]", "[][grow]"));
+		
+		JPanel panelTranslation = new JPanel();
+		panelTranslation.setBorder(new TitledBorder(null, "Translation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTransformations.add(panelTranslation, "cell 0 0,growx,aligny center");
+		panelTranslation.setLayout(new MigLayout("", "[][grow][][grow][grow]", ""));
+		
+		JLabel lblX = new JLabel("X:");
+		panelTranslation.add(lblX, "cell 0 0,alignx trailing");
+		
+		txtX = new JTextField();
+		txtX.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setCenter();
+			}
+		});
+		
+		panelTranslation.add(txtX, "cell 1 0,growx");
+		txtX.setColumns(10);
+		
+		JLabel lblY = new JLabel("Y:");
+		panelTranslation.add(lblY, "cell 2 0,alignx trailing");
+		
+		txtY = new JTextField();
+		txtY.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setCenter();
+			}
+		});
+		panelTranslation.add(txtY, "cell 3 0,growx");
+		txtY.setColumns(10);
+		
+		JPanel panelRotation = new JPanel();
+		panelRotation.setBorder(new TitledBorder(null, "Rotation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTransformations.add(panelRotation, "cell 0 1,grow");
 
 		JPanel panelWindow = new JPanel();
 		panelWindow.setBorder(new TitledBorder(null, "Window",
@@ -242,6 +291,18 @@ public class Layout implements ILayout {
 
 		frmComputerGraphics.setVisible(true);
 		frmComputerGraphics.pack();
+	}
+	
+	private void setCenter() {
+		String selected = jListObjects.getSelectedValue();
+		for (IGraphicSystem listener : listeners) {
+			listener.setCenter(selected, txtX.getText(), txtY.getText());
+		}
+	}
+	
+	public void fill(String x, String y) {
+		txtX.setText(x);
+		txtY.setText(y);
 	}
 
 	@Override

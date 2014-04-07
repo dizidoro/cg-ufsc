@@ -18,4 +18,8 @@ public interface IGraphicSystem {
 
 	void zoomOut();
 
+	void getCenter(String objectName);
+
+	void setCenter(String objectName, String x, String y);
+
 }

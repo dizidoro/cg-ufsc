@@ -41,6 +41,7 @@ public class Viewport extends JPanel {
 	private MouseHandlerDot mouseHandlerDot = new MouseHandlerDot();
 	private MouseHandlerLine mouseHandlerLine = new MouseHandlerLine();
 	private MouseHandlerPolygon mouseHandlerPolygon = new MouseHandlerPolygon();
+	private MovingAdapter mouseDraggin = new MovingAdapter();
 
 	private Coordinate p1;
 	private Coordinate p2;
@@ -84,6 +85,7 @@ public class Viewport extends JPanel {
 			this.addMouseListener(mouseHandlerDot);
 		} else if (graphicTool.equals(Geometry.Type.LINE)) {
 			this.addMouseListener(mouseHandlerLine);
+			this.addMouseListener(mouseDraggin);
 		} else if (graphicTool.equals(Geometry.Type.POLYGON)) {
 			this.addMouseListener(mouseHandlerPolygon);
 		}
@@ -126,7 +128,7 @@ public class Viewport extends JPanel {
 					Line line = (Line) object;
 					Coordinate a = line.getA();
 					Coordinate b = line.getB();
-
+					System.out.println("Coordenadas paint = a(" + a.getX() + ", " + a.getY() + ") - b(" + b.getX() + ", " + b.getY() + ")");
 					g.drawLine((int) a.getX(), (int) a.getY(), (int) b.getX(),
 							(int) b.getY());
 
@@ -158,6 +160,7 @@ public class Viewport extends JPanel {
 		if (graphicTool.equals(Geometry.Type.POINT)) {
 			g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p1.getX(),
 					(int) p1.getY());
+			System.out.println("Tool paint = (" + p1.getX() + "," + p1.getY() + ")");
 
 		} else if (graphicTool.equals(Geometry.Type.LINE)) {
 			g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(),
@@ -214,11 +217,13 @@ public class Viewport extends JPanel {
 			drawing = false;
 			Point p = e.getPoint();
 			p2 = new Coordinate(p.x, p.y, 0);
-			Line line = new Line(p1, p2);
+			line = new Line(p1, p2);
+			System.out.println("RELESEAD paint = a(" + p1.getX() + ", " + p1.getY() + ") - b(" + p2.getX() + ", " + p2.getY() + ")");
 			addNewObject(line);
 
 			repaint();
 		}
+		
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -231,6 +236,8 @@ public class Viewport extends JPanel {
 			}
 		}
 	}
+
+	Line line;
 
 	private class MouseHandlerPolygon extends MouseAdapter {
 
@@ -264,6 +271,36 @@ public class Viewport extends JPanel {
 		}
 
 	}
+	
+	 class MovingAdapter extends MouseAdapter {
+
+	        private int x;
+	        private int y;
+
+	        @Override
+	        public void mousePressed(MouseEvent e) {
+	            
+	            x = e.getX();
+	            y = e.getY();
+	        }
+
+	        @Override
+	        public void mouseDragged(MouseEvent e) {
+
+	            int dx = e.getX() - x;
+	            int dy = e.getY() - y;
+
+	            if (line != null) {
+	                
+	            	line.getA().setX(dx);;
+	                line.getB().setY(dy);
+	                repaint();
+	            }
+
+	            x += dx;
+	            y += dy;
+	        }   
+	    }
 
 	List<Geometry> objects = new ArrayList<>();
 

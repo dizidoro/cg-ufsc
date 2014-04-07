@@ -2,8 +2,8 @@ package graphic_system.model;
 
 public class Coordinate {
 
-	private final double x;
-	private final double y;
+	private double x;
+	private double y;
 	private final double z;
 
 	public Coordinate(double x, double y, double z) {
@@ -25,6 +25,15 @@ public class Coordinate {
 	public double getY() {
 		return y;
 	}
+	
+	public void setX(double x) {
+		this.x = x;
+	}
+
+	public void setY(double y) {
+		this.y = y;
+	}
+
 
 	public double getZ() {
 		return z;

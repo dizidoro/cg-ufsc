@@ -36,4 +36,16 @@ public class Polygon extends Geometry {
 		return new Polygon(this.getName(), viewportVertices);
 	}
 
+	@Override
+	public Coordinate getCenter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setCenter(Coordinate center) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -30,4 +30,14 @@ public class Dot extends Geometry {
 		return new Dot(this.getName(), viewportCoordinate);
 	}
 
+	@Override
+	public Coordinate getCenter() {
+		return coordinate;
+	}
+
+	@Override
+	public void setCenter(Coordinate center) {
+		this.coordinate = center;
+	}
+
 }

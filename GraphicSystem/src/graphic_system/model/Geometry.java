@@ -25,4 +25,8 @@ public abstract class Geometry {
 		POINT, LINE, POLYGON
 	}
 
+	public abstract Coordinate getCenter();
+
+	public abstract void setCenter(Coordinate center);
+
 }

@@ -39,4 +39,42 @@ public class Line extends Geometry {
 		return new Line(this.getName(), viewportA, viewportB);
 	}
 
+//	@Override
+//	public Geometry getWindowViewportTransformation(Window window,
+//			Viewport viewport, double zoom) {
+//		System.out.println("Zoom: " + zoom);
+//		Coordinate viewportA = a.getWindowViewportTransformation(window,
+//				viewport);
+//		Coordinate viewportB = b.getWindowViewportTransformation(window,
+//				viewport);
+//		if (a.getX() - b.getX() < 0) {
+//			viewportA.setX(viewportA.getX() - zoom);
+//			viewportB.setX(viewportB.getX() + zoom);
+//		} else {
+//			viewportA.setX(viewportA.getX() + zoom);
+//			viewportB.setX(viewportB.getX() - zoom);
+//		}
+//		
+//		if (a.getY() - b.getY() < 0) {
+//			viewportA.setY(viewportA.getY() + zoom);
+//			viewportB.setY(viewportB.getY() - zoom);
+//		} else {
+//			viewportA.setY(viewportA.getY() - zoom);
+//			viewportB.setY(viewportB.getY() + zoom);
+//		}
+//		return new Line(this.getName(), viewportA, viewportB);
+//	}
+
+	@Override
+	public Coordinate getCenter() {
+		// TODO Auto-generated method stub
+		return a;
+	}
+
+	@Override
+	public void setCenter(Coordinate center) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
