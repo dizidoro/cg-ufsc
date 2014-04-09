@@ -42,14 +42,12 @@ public class Dot extends Geometry {
 
 	@Override
 	public void scaleLess() {
-		// TODO Auto-generated method stub
-		
+		// Um ponto escalado é ele mesmo
 	}
 
 	@Override
 	public void scalePlus() {
-		// TODO Auto-generated method stub
-		
+		// Um ponto escalado é ele mesmo
 	}
 
 	@Override

@@ -128,7 +128,6 @@ public class Viewport extends JPanel {
 					Line line = (Line) object;
 					Coordinate a = line.getA();
 					Coordinate b = line.getB();
-					System.out.println("Coordenadas paint = a(" + a.getX() + ", " + a.getY() + ") - b(" + b.getX() + ", " + b.getY() + ")");
 					g.drawLine((int) a.getX(), (int) a.getY(), (int) b.getX(),
 							(int) b.getY());
 
@@ -218,7 +217,6 @@ public class Viewport extends JPanel {
 			Point p = e.getPoint();
 			p2 = new Coordinate(p.x, p.y, 0);
 			line = new Line(p1, p2);
-			System.out.println("RELESEAD paint = a(" + p1.getX() + ", " + p1.getY() + ") - b(" + p2.getX() + ", " + p2.getY() + ")");
 			addNewObject(line);
 
 			repaint();

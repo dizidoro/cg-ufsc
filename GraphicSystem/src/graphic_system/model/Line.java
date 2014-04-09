@@ -1,5 +1,7 @@
 package graphic_system.model;
 
+import graphic_system.ApplicationConfig;
+
 public class Line extends Geometry {
 
 	private static int lineCount = 1;
@@ -78,40 +80,76 @@ public class Line extends Geometry {
 		Coordinate oldCenter = getCenter();
 		double xDiff = center.getX() - oldCenter.getX();
 		double yDiff = center.getY() - oldCenter.getY();
-		a.setX(a.getX() + xDiff);
-		a.setY(a.getY() + yDiff);
-		b.setX(b.getX() + xDiff);
-		b.setY(b.getY() + yDiff);
+
+		double ax = a.getX() + xDiff;
+		double ay = a.getY() + yDiff;
+		double bx = b.getX() + xDiff;
+		double by = b.getY() + yDiff;
+
+		a.setX(ax);
+		a.setY(ay);
+		b.setX(bx);
+		b.setY(by);
 	}
 
 	@Override
 	public void scaleLess() {
-		// TODO Auto-generated method stub
-		
+		// Movo para a origem e multiplico pelo fator de escala
+		// Em seguida volto o objeto para o centro antigo
+		Coordinate center = getCenter();
+		setCenter(new Coordinate(0, 0));
+
+		double factor = 1 / ApplicationConfig.OBJECT_SCALE_FACTOR;
+		double ax = a.getX() * factor;
+		double ay = a.getY() * factor;
+		double bx = b.getX() * factor;
+		double by = b.getY() * factor;
+
+		a.setX(ax);
+		a.setY(ay);
+		b.setX(bx);
+		b.setY(by);
+
+		setCenter(center);
 	}
 
 	@Override
 	public void scalePlus() {
-		// TODO Auto-generated method stub
-		
+		// Movo para a origem e multiplico pelo fator de escala
+		// Em seguida volto o objeto para o centro antigo
+		Coordinate center = getCenter();
+		setCenter(new Coordinate(0, 0));
+
+		double factor = ApplicationConfig.OBJECT_SCALE_FACTOR;
+		double ax = a.getX() * factor;
+		double ay = a.getY() * factor;
+		double bx = b.getX() * factor;
+		double by = b.getY() * factor;
+
+		a.setX(ax);
+		a.setY(ay);
+		b.setX(bx);
+		b.setY(by);
+
+		setCenter(center);
 	}
 
 	@Override
 	public void objectRotation() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void worldRotation(Window window, Viewport viewport) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void dotRatation(Coordinate dot) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

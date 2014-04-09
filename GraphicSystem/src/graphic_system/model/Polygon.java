@@ -1,5 +1,7 @@
 package graphic_system.model;
 
+import graphic_system.ApplicationConfig;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,14 +95,37 @@ public class Polygon extends Geometry {
 
 	@Override
 	public void scaleLess() {
-		// TODO Auto-generated method stub
+		// Movo para a origem e multiplico pelo fator de escala
+		// Em seguida volto o objeto para o centro antigo
+		Coordinate center = getCenter();
+		setCenter(new Coordinate(0, 0));
+
+		double factor = 1 / ApplicationConfig.OBJECT_SCALE_FACTOR;
+		for (int i = 0; i < vertices.size(); i++) {
+			Coordinate coordinate = vertices.get(i);
+			coordinate.setX(coordinate.getX() * factor);
+			coordinate.setY(coordinate.getY() * factor);
+		}
+		
+		setCenter(center);
 		
 	}
 
 	@Override
 	public void scalePlus() {
-		// TODO Auto-generated method stub
+		// Movo para a origem e multiplico pelo fator de escala
+		// Em seguida volto o objeto para o centro antigo
+		Coordinate center = getCenter();
+		setCenter(new Coordinate(0, 0));
+
+		double factor = ApplicationConfig.OBJECT_SCALE_FACTOR;
+		for (int i = 0; i < vertices.size(); i++) {
+			Coordinate coordinate = vertices.get(i);
+			coordinate.setX(coordinate.getX() * factor);
+			coordinate.setY(coordinate.getY() * factor);
+		}
 		
+		setCenter(center);
 	}
 
 	@Override

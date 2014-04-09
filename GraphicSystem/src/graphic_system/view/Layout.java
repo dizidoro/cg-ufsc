@@ -402,23 +402,37 @@ public class Layout implements ILayout {
 		frmComputerGraphics.setVisible(true);
 		frmComputerGraphics.pack();
 	}
+	
+	public static final String SELECT_A_OBJECT = "Selecione um objeto!";
 
 	private void scalePlus() {
 		String selected = jListObjects.getSelectedValue();
-		for (IGraphicSystem listener : listeners) {
-			listener.scaleLess(selected);
+		if (selected == null) {
+			JOptionPane.showMessageDialog(null, SELECT_A_OBJECT);
+			return;
 		}
-	}
-
-	private void scaleLess() {
-		String selected = jListObjects.getSelectedValue();
 		for (IGraphicSystem listener : listeners) {
 			listener.scalePlus(selected);
 		}
 	}
 
+	private void scaleLess() {
+		String selected = jListObjects.getSelectedValue();
+		if (selected == null) {
+			JOptionPane.showMessageDialog(null, SELECT_A_OBJECT);
+			return;
+		}
+		for (IGraphicSystem listener : listeners) {
+			listener.scaleLess(selected);
+		}
+	}
+
 	private void setCenter() {
 		String selected = jListObjects.getSelectedValue();
+		if (selected == null) {
+			JOptionPane.showMessageDialog(null, SELECT_A_OBJECT);
+			return;
+		}
 		for (IGraphicSystem listener : listeners) {
 			listener.setCenter(selected, txtX.getText(), txtY.getText());
 		}
