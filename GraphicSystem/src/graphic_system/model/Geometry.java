@@ -29,4 +29,14 @@ public abstract class Geometry {
 
 	public abstract void setCenter(Coordinate center);
 
+	public abstract void scaleLess();
+
+	public abstract void scalePlus();
+
+	public abstract void objectRotation();
+
+	public abstract void worldRotation(Window window, Viewport viewport);
+
+	public abstract void dotRatation(Coordinate dot);
+
 }

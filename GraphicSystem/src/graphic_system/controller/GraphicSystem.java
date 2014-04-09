@@ -88,7 +88,7 @@ public class GraphicSystem implements IGraphicSystem {
 	public void getCenter(String objectName) {
 		Geometry object = displayFile.getObject(objectName);
 		Coordinate center = object.getCenter();
-		this.gui.fill(Double.toString(center.getX()), Double.toString(center.getY()));
+		this.gui.fill(Integer.toString((int) center.getX()), Double.toString((int) center.getY()));
 	}
 
 	@Override
@@ -96,6 +96,47 @@ public class GraphicSystem implements IGraphicSystem {
 		Geometry object = displayFile.getObject(objectName);
 		Coordinate center = new Coordinate(Double.parseDouble(x), Double.parseDouble(y));
 		object.setCenter(center);
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+
+	@Override
+	public void scaleLess(String objectName) {
+		Geometry object = displayFile.getObject(objectName);
+		object.scaleLess();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+
+	@Override
+	public void scalePlus(String objectName) {
+		Geometry object = displayFile.getObject(objectName);
+		object.scalePlus();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+		
+	}
+
+	@Override
+	public void worldRotation(String objectName) {
+		Geometry object = displayFile.getObject(objectName);
+		object.worldRotation(window, viewport);
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+
+	@Override
+	public void objectRotation(String objectName) {
+		Geometry object = displayFile.getObject(objectName);
+		object.objectRotation();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+
+	@Override
+	public void dotRotation(String objectName, Coordinate dot) {
+		Geometry object = displayFile.getObject(objectName);
+		object.dotRatation(dot);
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
 	}

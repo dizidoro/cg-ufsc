@@ -40,7 +40,6 @@ public class Window {
 		double widthCompensation = (xMax - xMin) * zoomInFactor;
 		double heightCompensation = (yMax - yMin) * zoomInFactor;
 
-
 		this.xMin += widthCompensation;
 		this.yMin += heightCompensation;
 

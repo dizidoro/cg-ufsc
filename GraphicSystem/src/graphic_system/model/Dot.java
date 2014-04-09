@@ -40,4 +40,33 @@ public class Dot extends Geometry {
 		this.coordinate = center;
 	}
 
+	@Override
+	public void scaleLess() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void scalePlus() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void objectRotation() {
+		// Um ponto rotacionado sobre ele mesmo fica no mesmo ponto
+	}
+
+	@Override
+	public void worldRotation(Window window, Viewport viewport) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dotRatation(Coordinate dot) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

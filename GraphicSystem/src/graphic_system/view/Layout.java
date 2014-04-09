@@ -1,5 +1,6 @@
 package graphic_system.view;
 
+import graphic_system.model.Coordinate;
 import graphic_system.model.Geometry;
 
 import java.awt.Color;
@@ -8,27 +9,29 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.JRadioButton;
 
 public class Layout implements ILayout {
 
@@ -44,6 +47,12 @@ public class Layout implements ILayout {
 	private JTextField txtY;
 	private JTextField txtXRotation;
 	private JTextField txtYRotation;
+
+	private ObjectRotation objectRotation;
+
+	enum ObjectRotation {
+		WORLD_CENTER, OBJECT_CENTER, DOT
+	}
 
 	public void addListenerController(IGraphicSystem listener) {
 		listeners.add(listener);
@@ -162,31 +171,37 @@ public class Layout implements ILayout {
 		panelObjects.add(scrollPaneList, "cell 0 0 2 1,grow");
 
 		JPanel panelTransformations = new JPanel();
-		panelObjects.add(panelTransformations, "cell 0 1 2 1,growx,aligny center");
-		panelTransformations.setBorder(new TitledBorder(new LineBorder(new Color(184, 207, 229)), "Transformations", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTransformations.setLayout(new MigLayout("", "[grow]", "[][]"));
-		
+		panelObjects.add(panelTransformations,
+				"cell 0 1 2 1,growx,aligny center");
+		panelTransformations.setBorder(new TitledBorder(new LineBorder(
+				new Color(184, 207, 229)), "Transformations",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTransformations.setLayout(new MigLayout("", "[grow]", "[][][]"));
+
 		JPanel panelTranslation = new JPanel();
-		panelTranslation.setBorder(new TitledBorder(null, "Translation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTransformations.add(panelTranslation, "cell 0 0,growx,aligny center");
-		panelTranslation.setLayout(new MigLayout("", "[][grow][][grow][grow]", ""));
-		
+		panelTranslation.setBorder(new TitledBorder(null, "Translation",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTransformations.add(panelTranslation,
+				"cell 0 0,growx,aligny center");
+		panelTranslation.setLayout(new MigLayout("", "[][grow][][grow][grow]",
+				""));
+
 		JLabel lblX = new JLabel("X:");
 		panelTranslation.add(lblX, "cell 0 0,alignx trailing");
-		
+
 		txtX = new JTextField();
 		txtX.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setCenter();
 			}
 		});
-		
+
 		panelTranslation.add(txtX, "cell 1 0,growx");
 		txtX.setColumns(10);
-		
+
 		JLabel lblY = new JLabel("Y:");
 		panelTranslation.add(lblY, "cell 2 0,alignx trailing");
-		
+
 		txtY = new JTextField();
 		txtY.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -195,34 +210,99 @@ public class Layout implements ILayout {
 		});
 		panelTranslation.add(txtY, "cell 3 0,growx");
 		txtY.setColumns(10);
-		
+
+		JPanel panelScale = new JPanel();
+		panelScale.setBorder(new TitledBorder(null, "Scale",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTransformations.add(panelScale, "cell 0 1,grow");
+
+		JButton buttonLess = new JButton("-");
+		buttonLess.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				scaleLess();
+			}
+		});
+		panelScale.add(buttonLess);
+
+		JButton buttonPlus = new JButton("+");
+		buttonPlus.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				scalePlus();
+			}
+		});
+		panelScale.add(buttonPlus);
+
 		JPanel panelRotation = new JPanel();
-		panelRotation.setBorder(new TitledBorder(null, "Rotation", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTransformations.add(panelRotation, "cell 0 1,growx,aligny top");
+		panelRotation.setBorder(new TitledBorder(null, "Rotation",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTransformations.add(panelRotation, "cell 0 2,growx,aligny top");
 		panelRotation.setLayout(new MigLayout("", "[]", "[][][][][]"));
-		
-		JRadioButton rdbtnCentroDoMundo = new JRadioButton("World center");
-		panelRotation.add(rdbtnCentroDoMundo, "cell 0 0");
-		
+
+		JRadioButton rdbtnWorldCenter = new JRadioButton("World center");
+		rdbtnWorldCenter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				objectRotation = ObjectRotation.WORLD_CENTER;
+			}
+		});
+		panelRotation.add(rdbtnWorldCenter, "cell 0 0");
+
 		JRadioButton rdbtnObjectCenter = new JRadioButton("Object center");
+		rdbtnObjectCenter.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				objectRotation = ObjectRotation.OBJECT_CENTER;
+			}
+		});
 		panelRotation.add(rdbtnObjectCenter, "cell 0 1");
-		
+
 		JRadioButton rdbtnDot = new JRadioButton("Dot");
+		rdbtnDot.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				objectRotation = ObjectRotation.DOT;
+			}
+		});
 		panelRotation.add(rdbtnDot, "flowx,cell 0 2");
-		
+
+		final ButtonGroup bgRotation = new ButtonGroup();
+		bgRotation.add(rdbtnWorldCenter);
+		bgRotation.add(rdbtnObjectCenter);
+		bgRotation.add(rdbtnDot);
+
 		JButton btnApply = new JButton("Apply");
+		btnApply.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (objectRotation.equals(ObjectRotation.WORLD_CENTER)) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.worldRotation(selected);
+					}
+				} else if (objectRotation.equals(ObjectRotation.OBJECT_CENTER)) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.objectRotation(selected);
+					}
+				} else if (objectRotation.equals(ObjectRotation.DOT)) {
+					String selected = jListObjects.getSelectedValue();
+					double x = Double.parseDouble(txtXRotation.getText());
+					double y = Double.parseDouble(txtYRotation.getText());
+					Coordinate dot = new Coordinate(x, y);
+					for (IGraphicSystem listener : listeners) {
+						listener.dotRotation(selected, dot);
+					}
+				}
+			}
+		});
 		panelRotation.add(btnApply, "cell 0 3");
-		
+
 		JLabel lblXRotation = new JLabel("X:");
 		panelRotation.add(lblXRotation, "cell 0 2");
-		
+
 		txtXRotation = new JTextField();
 		panelRotation.add(txtXRotation, "cell 0 2");
 		txtXRotation.setColumns(10);
-		
+
 		JLabel lblYRotation = new JLabel("Y:");
 		panelRotation.add(lblYRotation, "cell 0 2");
-		
+
 		txtYRotation = new JTextField();
 		panelRotation.add(txtYRotation, "cell 0 2");
 		txtYRotation.setColumns(10);
@@ -322,14 +402,28 @@ public class Layout implements ILayout {
 		frmComputerGraphics.setVisible(true);
 		frmComputerGraphics.pack();
 	}
-	
+
+	private void scalePlus() {
+		String selected = jListObjects.getSelectedValue();
+		for (IGraphicSystem listener : listeners) {
+			listener.scaleLess(selected);
+		}
+	}
+
+	private void scaleLess() {
+		String selected = jListObjects.getSelectedValue();
+		for (IGraphicSystem listener : listeners) {
+			listener.scalePlus(selected);
+		}
+	}
+
 	private void setCenter() {
 		String selected = jListObjects.getSelectedValue();
 		for (IGraphicSystem listener : listeners) {
 			listener.setCenter(selected, txtX.getText(), txtY.getText());
 		}
 	}
-	
+
 	public void fill(String x, String y) {
 		txtX.setText(x);
 		txtY.setText(y);
