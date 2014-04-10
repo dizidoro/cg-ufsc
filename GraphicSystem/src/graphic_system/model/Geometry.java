@@ -1,13 +1,17 @@
 package graphic_system.model;
 
+import java.awt.Color;
+
 public abstract class Geometry {
 
 	private final String name;
 	private final Type type;
+	private Color color;
 
-	public Geometry(String name, Type type) {
+	public Geometry(String name, Type type, Color color) {
 		this.name = name;
 		this.type = type;
+		this.color = color;
 	}
 
 	public String getName() {
@@ -38,5 +42,13 @@ public abstract class Geometry {
 	public abstract void worldRotation(Window window, Viewport viewport);
 
 	public abstract void dotRatation(Coordinate dot);
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
 
 }

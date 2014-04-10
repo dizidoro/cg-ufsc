@@ -2,6 +2,8 @@ package graphic_system.model;
 
 import graphic_system.ApplicationConfig;
 
+import java.awt.Color;
+
 public class Line extends Geometry {
 
 	private static int lineCount = 1;
@@ -11,15 +13,15 @@ public class Line extends Geometry {
 	private Coordinate a;
 	private Coordinate b;
 
-	public Line(Coordinate a, Coordinate b) {
-		super("line" + lineCount, Geometry.Type.LINE);
+	public Line(Coordinate a, Coordinate b, Color color) {
+		super("line" + lineCount, Geometry.Type.LINE, color);
 		this.a = a;
 		this.b = b;
 		lineCount++;
 	}
 
-	private Line(String name, Coordinate a, Coordinate b) {
-		super(name, Geometry.Type.LINE);
+	private Line(String name, Coordinate a, Coordinate b, Color color) {
+		super(name, Geometry.Type.LINE, color);
 		this.a = a;
 		this.b = b;
 	}
@@ -38,9 +40,11 @@ public class Line extends Geometry {
 				viewport);
 		Coordinate viewportB = b.getWindowViewportTransformation(window,
 				viewport);
-		return new Line(this.getName(), viewportA, viewportB);
+		return new Line(this.getName(), viewportA, viewportB, this.getColor());
 	}
 
+	// XXX: Tentativa de corrigir quando desenha com zoom
+	//
 	// @Override
 	// public Geometry getWindowViewportTransformation(Window window,
 	// Viewport viewport, double zoom) {

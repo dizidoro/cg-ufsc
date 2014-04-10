@@ -2,6 +2,7 @@ package graphic_system.model;
 
 import graphic_system.ApplicationConfig;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,15 +12,15 @@ public class Polygon extends Geometry {
 
 	List<Coordinate> vertices;
 
-	public Polygon(List<Coordinate> vertices) {
-		super("polygon" + polygonCount, Geometry.Type.POLYGON);
+	public Polygon(List<Coordinate> vertices, Color color) {
+		super("polygon" + polygonCount, Geometry.Type.POLYGON, color);
 
 		this.vertices = vertices;
 		polygonCount++;
 	}
 
-	private Polygon(String name, List<Coordinate> vertices) {
-		super(name, Geometry.Type.POLYGON);
+	private Polygon(String name, List<Coordinate> vertices, Color color) {
+		super(name, Geometry.Type.POLYGON, color);
 		this.vertices = vertices;
 	}
 
@@ -35,7 +36,7 @@ public class Polygon extends Geometry {
 			viewportVertices.add(vertice.getWindowViewportTransformation(
 					window, viewport));
 		}
-		return new Polygon(this.getName(), viewportVertices);
+		return new Polygon(this.getName(), viewportVertices, this.getColor());
 	}
 
 	@Override
@@ -106,9 +107,9 @@ public class Polygon extends Geometry {
 			coordinate.setX(coordinate.getX() * factor);
 			coordinate.setY(coordinate.getY() * factor);
 		}
-		
+
 		setCenter(center);
-		
+
 	}
 
 	@Override
@@ -124,26 +125,26 @@ public class Polygon extends Geometry {
 			coordinate.setX(coordinate.getX() * factor);
 			coordinate.setY(coordinate.getY() * factor);
 		}
-		
+
 		setCenter(center);
 	}
 
 	@Override
 	public void objectRotation() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void worldRotation(Window window, Viewport viewport) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void dotRatation(Coordinate dot) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

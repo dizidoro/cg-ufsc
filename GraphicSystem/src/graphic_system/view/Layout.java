@@ -4,6 +4,7 @@ import graphic_system.model.Coordinate;
 import graphic_system.model.Geometry;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -88,14 +90,12 @@ public class Layout implements ILayout {
 
 		JPanel panelMenu = new JPanel();
 		frmComputerGraphics.getContentPane().add(panelMenu, "cell 0 1,grow");
-		panelMenu.setLayout(new MigLayout("", "[225px,grow]",
-				"[][229px,grow][]"));
+		panelMenu.setLayout(new MigLayout("", "[225px,grow]", "[][][229px,grow][]"));
 
 		JPanel panelTools = new JPanel();
 		panelTools.setBorder(new TitledBorder(null, "Draw",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelMenu.add(panelTools, "cell 0 0,growx,aligny top");
-		panelTools.setLayout(new MigLayout("", "[][][]", "[]"));
+		panelMenu.add(panelTools, "cell 0 0 1 2,growx,aligny top");
 
 		viewport.setBorder(new CompoundBorder(
 				new LineBorder(new Color(0, 0, 0)), null));
@@ -115,8 +115,9 @@ public class Layout implements ILayout {
 				viewport.setGraphicTool(Geometry.Type.POINT);
 			}
 		});
+		panelTools.setLayout(new MigLayout("", "[34px,grow][34px][34px]", "[10px][grow]"));
 		drawButtons.add(tglbtnPencil);
-		panelTools.add(tglbtnPencil, "cell 0 0");
+		panelTools.add(tglbtnPencil, "cell 0 0,alignx left,aligny top");
 
 		final JToggleButton tglbtnLine = new JToggleButton("");
 		tglbtnLine.setIcon(new ImageIcon("img/Imagetools-Line-icon.png"));
@@ -131,7 +132,7 @@ public class Layout implements ILayout {
 			}
 		});
 		drawButtons.add(tglbtnLine);
-		panelTools.add(tglbtnLine, "cell 1 0");
+		panelTools.add(tglbtnLine, "cell 1 0,alignx left,aligny top");
 
 		final JToggleButton tglbtnPolygon = new JToggleButton("");
 		tglbtnPolygon
@@ -147,13 +148,63 @@ public class Layout implements ILayout {
 			}
 		});
 		drawButtons.add(tglbtnPolygon);
-		panelTools.add(tglbtnPolygon, "cell 2 0");
-
+		panelTools.add(tglbtnPolygon, "cell 2 0,alignx left,aligny top");
+		
+		JPanel panelColors = new JPanel();
+		panelColors.setBorder(new TitledBorder(null, "Color", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTools.add(panelColors, "cell 0 1 3 1,grow");
+		
+		JButton btnBlack = new JButton("");
+		btnBlack.setBackground(Color.BLACK);
+		btnBlack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				viewport.setColorTool(Color.BLACK);
+			}
+		});
+		panelColors.add(btnBlack);
+		
+		JButton btnBlue = new JButton("");
+		btnBlue.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.BLUE);
+			}
+		});
+		btnBlue.setBounds(0, 0, 30, 30);
+		btnBlue.setBackground(Color.BLUE);
+		panelColors.add(btnBlue);
+		
+		JButton btnGreen = new JButton("");
+		btnGreen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.GREEN);
+			}
+		});
+		btnGreen.setBackground(Color.GREEN);
+		panelColors.add(btnGreen);
+		
+		JButton btnYellow = new JButton("");
+		btnYellow.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.YELLOW);
+			}
+		});
+		btnYellow.setBackground(Color.YELLOW);
+		panelColors.add(btnYellow);
+		
+		JButton btnRed = new JButton("");
+		btnRed.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.RED);
+			}
+		});
+		btnRed.setBackground(Color.RED);
+		panelColors.add(btnRed);
+		
 		JPanel panelObjects = new JPanel();
 		panelObjects.setBorder(new TitledBorder(new LineBorder(new Color(184,
 				207, 229)), "Objects", TitledBorder.LEADING, TitledBorder.TOP,
 				null, null));
-		panelMenu.add(panelObjects, "cell 0 1,grow");
+		panelMenu.add(panelObjects, "cell 0 2,grow");
 		panelObjects.setLayout(new MigLayout("", "[grow][grow]", "[grow][]"));
 
 		listObjects = new DefaultListModel<String>();
@@ -310,7 +361,7 @@ public class Layout implements ILayout {
 		JPanel panelWindow = new JPanel();
 		panelWindow.setBorder(new TitledBorder(null, "Window",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelMenu.add(panelWindow, "cell 0 2,growx,aligny bottom");
+		panelMenu.add(panelWindow, "cell 0 3,growx,aligny bottom");
 		panelWindow.setLayout(new MigLayout("", "[][][]", "[][][]"));
 
 		JButton btnZoomOut = new JButton("");

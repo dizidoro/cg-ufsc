@@ -1,21 +1,23 @@
 package graphic_system.model;
 
+import java.awt.Color;
+
 public class Dot extends Geometry {
 
 	private static int dotCount = 1;
 
 	private Coordinate coordinate;
 
-	public Dot(Coordinate coordinate) {
-		super("dot" + dotCount, Geometry.Type.POINT);
+	public Dot(Coordinate coordinate, Color color) {
+		super("dot" + dotCount, Geometry.Type.POINT, color);
 
 		this.coordinate = coordinate;
 
 		dotCount++;
 	}
 
-	private Dot(String name, Coordinate coordinate) {
-		super(name, Geometry.Type.POINT);
+	private Dot(String name, Coordinate coordinate, Color color) {
+		super(name, Geometry.Type.POINT, color);
 		this.coordinate = coordinate;
 	}
 
@@ -27,7 +29,7 @@ public class Dot extends Geometry {
 	public Dot getWindowViewportTransformation(Window window, Viewport viewport) {
 		Coordinate viewportCoordinate = coordinate
 				.getWindowViewportTransformation(window, viewport);
-		return new Dot(this.getName(), viewportCoordinate);
+		return new Dot(this.getName(), viewportCoordinate, this.getColor());
 	}
 
 	@Override

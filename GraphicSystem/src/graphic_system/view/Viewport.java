@@ -49,6 +49,7 @@ public class Viewport extends JPanel {
 	ArrayList<Coordinate> polygonClicks = new ArrayList<>();
 
 	private Geometry.Type graphicTool = null;
+	private Color colorTool = Color.BLACK;
 
 	// Seta a ferramenta e carrega o listener associado
 	public void setGraphicTool(Geometry.Type graphicTool) {
@@ -57,6 +58,10 @@ public class Viewport extends JPanel {
 		}
 		this.graphicTool = graphicTool;
 		addMouseListener();
+	}
+
+	public void setColorTool(Color color) {
+		colorTool = color;
 	}
 
 	private ArrayList<IGraphicSystem> listenersGC = new ArrayList<>();
@@ -110,7 +115,7 @@ public class Viewport extends JPanel {
 
 		// TODO: Tornar isso configurável
 		Graphics2D g2d = (Graphics2D) g;
-		g.setColor(Color.BLACK);
+		g.setColor(colorTool);
 		g2d.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_BEVEL));
 
@@ -118,6 +123,7 @@ public class Viewport extends JPanel {
 			super.paintComponent(g);
 
 			for (Geometry object : objects) {
+				g.setColor(object.getColor());
 				if (object.getType().equals(Geometry.Type.POINT)) {
 					Dot dot = (Dot) object;
 					Coordinate coordinate = dot.getCoordinate();
@@ -159,7 +165,8 @@ public class Viewport extends JPanel {
 		if (graphicTool.equals(Geometry.Type.POINT)) {
 			g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p1.getX(),
 					(int) p1.getY());
-			System.out.println("Tool paint = (" + p1.getX() + "," + p1.getY() + ")");
+			System.out.println("Tool paint = (" + p1.getX() + "," + p1.getY()
+					+ ")");
 
 		} else if (graphicTool.equals(Geometry.Type.LINE)) {
 			g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(),
@@ -188,7 +195,7 @@ public class Viewport extends JPanel {
 			Point p = e.getPoint();
 			p1 = new Coordinate(p.x, p.y);
 			System.out.println("Coordenada: " + p.x + "," + p.y);
-			Dot dot = new Dot(p1);
+			Dot dot = new Dot(p1, colorTool);
 			addNewObject(dot);
 
 			repaint();
@@ -216,12 +223,11 @@ public class Viewport extends JPanel {
 			drawing = false;
 			Point p = e.getPoint();
 			p2 = new Coordinate(p.x, p.y, 0);
-			line = new Line(p1, p2);
+			line = new Line(p1, p2, colorTool);
 			addNewObject(line);
 
 			repaint();
 		}
-		
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
@@ -250,7 +256,7 @@ public class Viewport extends JPanel {
 					coordinates.add(polygonClicks.get(i));
 				}
 
-				Polygon polygon = new Polygon(coordinates);
+				Polygon polygon = new Polygon(coordinates, colorTool);
 				addNewObject(polygon);
 
 				repaint();
@@ -269,36 +275,37 @@ public class Viewport extends JPanel {
 		}
 
 	}
-	
-	 class MovingAdapter extends MouseAdapter {
 
-	        private int x;
-	        private int y;
+	class MovingAdapter extends MouseAdapter {
 
-	        @Override
-	        public void mousePressed(MouseEvent e) {
-	            
-	            x = e.getX();
-	            y = e.getY();
-	        }
+		private int x;
+		private int y;
 
-	        @Override
-	        public void mouseDragged(MouseEvent e) {
+		@Override
+		public void mousePressed(MouseEvent e) {
 
-	            int dx = e.getX() - x;
-	            int dy = e.getY() - y;
+			x = e.getX();
+			y = e.getY();
+		}
 
-	            if (line != null) {
-	                
-	            	line.getA().setX(dx);;
-	                line.getB().setY(dy);
-	                repaint();
-	            }
+		@Override
+		public void mouseDragged(MouseEvent e) {
 
-	            x += dx;
-	            y += dy;
-	        }   
-	    }
+			int dx = e.getX() - x;
+			int dy = e.getY() - y;
+
+			if (line != null) {
+
+				line.getA().setX(dx);
+				;
+				line.getB().setY(dy);
+				repaint();
+			}
+
+			x += dx;
+			y += dy;
+		}
+	}
 
 	List<Geometry> objects = new ArrayList<>();
 
