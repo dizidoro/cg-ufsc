@@ -287,7 +287,7 @@ public class Layout implements ILayout {
 		panelRotation.setBorder(new TitledBorder(null, "Rotation",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelTransformations.add(panelRotation, "cell 0 2,growx,aligny top");
-		panelRotation.setLayout(new MigLayout("", "[]", "[][][][][]"));
+		panelRotation.setLayout(new MigLayout("", "[]", "[][][][][][][]"));
 
 		JRadioButton rdbtnWorldCenter = new JRadioButton("World center");
 		rdbtnWorldCenter.addActionListener(new ActionListener() {
@@ -357,6 +357,60 @@ public class Layout implements ILayout {
 		txtYRotation = new JTextField();
 		panelRotation.add(txtYRotation, "cell 0 2");
 		txtYRotation.setColumns(10);
+		
+		JButton btnLeft = new JButton("");
+		btnLeft.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (objectRotation == ObjectRotation.WORLD_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateAntiClockwiseAroundOrigin(selected);
+					}
+				} else if (objectRotation == ObjectRotation.OBJECT_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateAntiClockwiseAroundCenter(selected);
+					}
+				} else if (objectRotation == ObjectRotation.DOT) {
+					String selected = jListObjects.getSelectedValue();
+					double x = Double.parseDouble(txtXRotation.getText());
+					double y = Double.parseDouble(txtYRotation.getText());
+					Coordinate dot = new Coordinate(x, y);
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateAntiClockwiseAroundPoint(selected, dot);
+					}
+				}
+			}
+		});
+		btnLeft.setIcon(new ImageIcon("img/Arrow-turn-left-icon.png"));
+		panelRotation.add(btnLeft, "flowx,cell 0 3,alignx center");
+		
+		JButton btnRight = new JButton("");
+		btnRight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if (objectRotation == ObjectRotation.WORLD_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateClockwiseAroundOrigin(selected);
+					}
+				} else if (objectRotation == ObjectRotation.OBJECT_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateClockwiseAroundCenter(selected);
+					}
+				} else if (objectRotation == ObjectRotation.DOT) {
+					String selected = jListObjects.getSelectedValue();
+					double x = Double.parseDouble(txtXRotation.getText());
+					double y = Double.parseDouble(txtYRotation.getText());
+					Coordinate dot = new Coordinate(x, y);
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateClockwiseAroundPoint(selected, dot);
+					}
+				}
+			}
+		});
+		btnRight.setIcon(new ImageIcon("img/Arrow-turn-right-icon.png"));
+		panelRotation.add(btnRight, "cell 0 3,alignx center");
 
 		JPanel panelWindow = new JPanel();
 		panelWindow.setBorder(new TitledBorder(null, "Window",
@@ -422,25 +476,7 @@ public class Layout implements ILayout {
 		JButton btnTurnLeft = new JButton("");
 		btnTurnLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (objectRotation == ObjectRotation.WORLD_CENTER) {
-					String selected = jListObjects.getSelectedValue();
-					for (IGraphicSystem listener : listeners) {
-						listener.rotateAntiClockwiseAroundOrigin(selected);
-					}
-				} else if (objectRotation == ObjectRotation.OBJECT_CENTER) {
-					String selected = jListObjects.getSelectedValue();
-					for (IGraphicSystem listener : listeners) {
-						listener.rotateAntiClockwiseAroundCenter(selected);
-					}
-				} else if (objectRotation == ObjectRotation.DOT) {
-					String selected = jListObjects.getSelectedValue();
-					double x = Double.parseDouble(txtXRotation.getText());
-					double y = Double.parseDouble(txtYRotation.getText());
-					Coordinate dot = new Coordinate(x, y);
-					for (IGraphicSystem listener : listeners) {
-						listener.rotateAntiClockwiseAroundPoint(selected, dot);
-					}
-				}
+				
 			}
 		});
 		btnTurnLeft.setIcon(new ImageIcon("img/Arrow-turn-left-icon.png"));
@@ -460,25 +496,7 @@ public class Layout implements ILayout {
 		JButton btnTurnRight = new JButton("");
 		btnTurnRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (objectRotation == ObjectRotation.WORLD_CENTER) {
-					String selected = jListObjects.getSelectedValue();
-					for (IGraphicSystem listener : listeners) {
-						listener.rotateClockwiseAroundOrigin(selected);
-					}
-				} else if (objectRotation == ObjectRotation.OBJECT_CENTER) {
-					String selected = jListObjects.getSelectedValue();
-					for (IGraphicSystem listener : listeners) {
-						listener.rotateClockwiseAroundCenter(selected);
-					}
-				} else if (objectRotation == ObjectRotation.DOT) {
-					String selected = jListObjects.getSelectedValue();
-					double x = Double.parseDouble(txtXRotation.getText());
-					double y = Double.parseDouble(txtYRotation.getText());
-					Coordinate dot = new Coordinate(x, y);
-					for (IGraphicSystem listener : listeners) {
-						listener.rotateClockwiseAroundPoint(selected, dot);
-					}
-				}
+				
 			}
 		});
 		btnTurnRight.setIcon(new ImageIcon("img/Arrow-turn-right-icon.png"));
