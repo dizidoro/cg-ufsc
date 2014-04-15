@@ -118,25 +118,49 @@ public class GraphicSystem implements IGraphicSystem {
 	}
 
 	@Override
-	public void worldRotation(String objectName) {
+	public void rotateClockwiseAroundOrigin(String objectName) {
 		Geometry object = displayFile.getObject(objectName);
-		object.worldRotation(window, viewport);
+		object.rotateClockwiseAroundOrigin();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundOrigin(String objectName) {
+		Geometry object = displayFile.getObject(objectName);
+		object.rotateAntiClockwiseAroundOrigin();
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
 	}
 
 	@Override
-	public void objectRotation(String objectName) {
+	public void rotateClockwiseAroundCenter(String objectName) {
 		Geometry object = displayFile.getObject(objectName);
-		object.objectRotation();
+		object.rotateClockwiseAroundCenter();
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundCenter(String objectName) {
+		Geometry object = displayFile.getObject(objectName);
+		object.rotateAntiClockwiseAroundCenter();
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
 	}
 
 	@Override
-	public void dotRotation(String objectName, Coordinate dot) {
+	public void rotateClockwiseAroundPoint(String objectName, Coordinate dot) {
 		Geometry object = displayFile.getObject(objectName);
-		object.dotRatation(dot);
+		object.rotateClockwiseAroundPoint(dot);
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundPoint(String objectName, Coordinate dot) {
+		Geometry object = displayFile.getObject(objectName);
+		object.rotateAntiClockwiseAroundPoint(dot);
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
 	}

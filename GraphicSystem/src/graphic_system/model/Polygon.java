@@ -129,22 +129,50 @@ public class Polygon extends Geometry {
 		setCenter(center);
 	}
 
-	@Override
-	public void objectRotation() {
-		// TODO Auto-generated method stub
 
+	@Override
+	public void rotateClockwiseAroundOrigin() {
+		for(Coordinate vertice : vertices){
+			vertice.rotateClockwiseAroundOrigin();
+		}
+
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundOrigin() {
+		for(Coordinate vertice : vertices){
+			vertice.rotateAntiClockwiseAroundOrigin();
+		}
 	}
 
 	@Override
-	public void worldRotation(Window window, Viewport viewport) {
-		// TODO Auto-generated method stub
-
+	public void rotateClockwiseAroundCenter() {
+		Coordinate center = this.getCenter();
+		this.rotateClockwiseAroundPoint(center);
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundCenter() {
+		Coordinate center = this.getCenter();
+		this.rotateAntiClockwiseAroundPoint(center);
+	}
+	
+	@Override
+	public void rotateClockwiseAroundPoint(Coordinate coordinate) {
+		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
+		this.transform(rotationMatrix);
 	}
 
 	@Override
-	public void dotRatation(Coordinate dot) {
-		// TODO Auto-generated method stub
-
+	public void rotateAntiClockwiseAroundPoint(Coordinate coordinate) {
+		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
+		this.transform(rotationMatrix);
+	}
+	
+	private void transform(double[][] matrix){
+		for(Coordinate vertice : vertices){
+			vertice.transform(matrix);
+		}
 	}
 
 }

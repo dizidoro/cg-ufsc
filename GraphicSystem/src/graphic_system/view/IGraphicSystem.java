@@ -27,10 +27,16 @@ public interface IGraphicSystem {
 
 	void scalePlus(String objectName);
 
-	void worldRotation(String objectName);
+	void rotateClockwiseAroundOrigin(String objectName);
+	
+	void rotateAntiClockwiseAroundOrigin(String objectName);
 
-	void objectRotation(String objectName);
+	void rotateClockwiseAroundCenter(String objectName);
+	
+	void rotateAntiClockwiseAroundCenter(String objectName);
 
-	void dotRotation(String objectName, Coordinate dot);
+	void rotateClockwiseAroundPoint(String objectName, Coordinate dot);
+	
+	void rotateAntiClockwiseAroundPoint(String objectName, Coordinate dot);
 
 }

@@ -1,4 +1,6 @@
 package graphic_system.model;
+import java.lang.Math;
+import math.Matrix;
 
 public class Coordinate {
 
@@ -47,6 +49,42 @@ public class Coordinate {
 		double viewportY = (1 - ((y - window.getYMin()) / (window.getYMax() - window
 				.getXMin()))) * (viewport.getYMax() - viewport.getYMin());
 		return new Coordinate(viewportX, viewportY);
+	}
+	
+	public void rotateClockwiseAroundOrigin(){
+		double angle = 350;
+		rotateAroundOrigin(angle);
+	}
+	
+	public void rotateAntiClockwiseAroundOrigin(){
+		double angle = 10;
+		rotateAroundOrigin(angle);
+	}
+	
+	private void rotateAroundOrigin(double angle){
+		double cos = Math.cos(Math.toRadians(angle));
+		double sin = Math.sin(Math.toRadians(angle));
+		double temp_x = x * cos - y * sin;
+		double temp_y = x * sin + y * cos;
+		x = temp_x;
+		y = temp_y;
+	}
+	
+	public void transform(double[][] transformationMatrix){
+		double[][] coordinateMatrix = this.matrix();
+		
+		double[][] transformedCoordinateMatrix = Matrix.multiplyMatrix(coordinateMatrix, transformationMatrix);
+		
+		x = transformedCoordinateMatrix[0][0];
+		y = transformedCoordinateMatrix[0][1];
+	}
+	
+	private double[][] matrix(){
+		double[][] coordinateMatrix = new double[1][3];
+		coordinateMatrix[0][0] = x;
+		coordinateMatrix[0][1] = y;
+		coordinateMatrix[0][2] = 1;
+		return coordinateMatrix;
 	}
 
 }

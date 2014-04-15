@@ -44,29 +44,47 @@ public class Dot extends Geometry {
 
 	@Override
 	public void scaleLess() {
-		// Um ponto escalado é ele mesmo
+		// Um ponto escalado �� ele mesmo
 	}
 
 	@Override
 	public void scalePlus() {
-		// Um ponto escalado é ele mesmo
+		// Um ponto escalado �� ele mesmo
 	}
 
 	@Override
-	public void objectRotation() {
+	public void rotateClockwiseAroundCenter() {
 		// Um ponto rotacionado sobre ele mesmo fica no mesmo ponto
+		// Nada pra fazer aqui
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundCenter() {
+		// Um ponto rotacionado sobre ele mesmo fica no mesmo ponto
+		// Nada pra fazer aqui
 	}
 
 	@Override
-	public void worldRotation(Window window, Viewport viewport) {
-		// TODO Auto-generated method stub
-		
+	public void rotateClockwiseAroundOrigin() {
+		coordinate.rotateClockwiseAroundOrigin();
+	}
+	
+	public void rotateAntiClockwiseAroundOrigin(){
+		coordinate.rotateAntiClockwiseAroundOrigin();
 	}
 
 	@Override
-	public void dotRatation(Coordinate dot) {
-		// TODO Auto-generated method stub
-		
+	public void rotateClockwiseAroundPoint(Coordinate rotationCoordinate) {
+		double[][] rotationMatrix = getClockwiseRotationMatrix(rotationCoordinate);
+		coordinate.transform(rotationMatrix);
 	}
+
+	@Override
+	public void rotateAntiClockwiseAroundPoint(Coordinate rotationCoordinate) {
+		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(rotationCoordinate);
+		coordinate.transform(rotationMatrix);
+	}
+
+
 
 }

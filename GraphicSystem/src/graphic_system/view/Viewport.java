@@ -28,9 +28,10 @@ public class Viewport extends JPanel {
 		double xMax = ApplicationConfig.initXMax;
 		double yMax = ApplicationConfig.initYMax;
 
-		int height = (int) (yMax - yMin);
-		int width = (int) (xMax - xMin);
-		this.setSize(width, height);
+//		int height = (int) (yMax - yMin);
+//		int width = (int) (xMax - xMin);
+//		this.setSize(width, height);
+		this.setSize(500, 500);
 	}
 
 	/**
@@ -113,7 +114,7 @@ public class Viewport extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 
-		// TODO: Tornar isso configurável
+		// TODO: Tornar isso configur��vel
 		Graphics2D g2d = (Graphics2D) g;
 		g.setColor(colorTool);
 		g2d.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND,

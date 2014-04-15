@@ -67,7 +67,7 @@ public class Layout implements ILayout {
 	 * @param viewport
 	 */
 	public Layout() {
-		// Layout tem uma Vieport gráfica
+		// Layout tem uma Vieport gr��fica
 		viewport = new Viewport();
 		viewport.addListenerLayout(this);
 
@@ -318,31 +318,31 @@ public class Layout implements ILayout {
 		bgRotation.add(rdbtnObjectCenter);
 		bgRotation.add(rdbtnDot);
 
-		JButton btnApply = new JButton("Apply");
-		btnApply.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (objectRotation.equals(ObjectRotation.WORLD_CENTER)) {
-					String selected = jListObjects.getSelectedValue();
-					for (IGraphicSystem listener : listeners) {
-						listener.worldRotation(selected);
-					}
-				} else if (objectRotation.equals(ObjectRotation.OBJECT_CENTER)) {
-					String selected = jListObjects.getSelectedValue();
-					for (IGraphicSystem listener : listeners) {
-						listener.objectRotation(selected);
-					}
-				} else if (objectRotation.equals(ObjectRotation.DOT)) {
-					String selected = jListObjects.getSelectedValue();
-					double x = Double.parseDouble(txtXRotation.getText());
-					double y = Double.parseDouble(txtYRotation.getText());
-					Coordinate dot = new Coordinate(x, y);
-					for (IGraphicSystem listener : listeners) {
-						listener.dotRotation(selected, dot);
-					}
-				}
-			}
-		});
-		panelRotation.add(btnApply, "cell 0 3");
+//		JButton btnApply = new JButton("Apply");
+//		btnApply.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				if (objectRotation.equals(ObjectRotation.WORLD_CENTER)) {
+//					String selected = jListObjects.getSelectedValue();
+//					for (IGraphicSystem listener : listeners) {
+//						listener.rotateAntiClockwiseAroundOrigin(selected);
+//					}
+//				} else if (objectRotation.equals(ObjectRotation.OBJECT_CENTER)) {
+//					String selected = jListObjects.getSelectedValue();
+//					for (IGraphicSystem listener : listeners) {
+//						listener.rotateClockwiseAroundCenter(selected);
+//					}
+//				} else if (objectRotation.equals(ObjectRotation.DOT)) {
+//					String selected = jListObjects.getSelectedValue();
+//					double x = Double.parseDouble(txtXRotation.getText());
+//					double y = Double.parseDouble(txtYRotation.getText());
+//					Coordinate dot = new Coordinate(x, y);
+//					for (IGraphicSystem listener : listeners) {
+//						listener.dotRotation(selected, dot);
+//					}
+//				}
+//			}
+//		});
+//		panelRotation.add(btnApply, "cell 0 3");
 
 		JLabel lblXRotation = new JLabel("X:");
 		panelRotation.add(lblXRotation, "cell 0 2");
@@ -420,6 +420,29 @@ public class Layout implements ILayout {
 		panelWindow.add(btnMoveRight, "cell 2 1");
 
 		JButton btnTurnLeft = new JButton("");
+		btnTurnLeft.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (objectRotation == ObjectRotation.WORLD_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateAntiClockwiseAroundOrigin(selected);
+					}
+				} else if (objectRotation == ObjectRotation.OBJECT_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateAntiClockwiseAroundCenter(selected);
+					}
+				} else if (objectRotation == ObjectRotation.DOT) {
+					String selected = jListObjects.getSelectedValue();
+					double x = Double.parseDouble(txtXRotation.getText());
+					double y = Double.parseDouble(txtYRotation.getText());
+					Coordinate dot = new Coordinate(x, y);
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateAntiClockwiseAroundPoint(selected, dot);
+					}
+				}
+			}
+		});
 		btnTurnLeft.setIcon(new ImageIcon("img/Arrow-turn-left-icon.png"));
 		panelWindow.add(btnTurnLeft, "cell 0 2");
 
@@ -435,6 +458,29 @@ public class Layout implements ILayout {
 		panelWindow.add(btnMoveDown, "cell 1 2");
 
 		JButton btnTurnRight = new JButton("");
+		btnTurnRight.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (objectRotation == ObjectRotation.WORLD_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateClockwiseAroundOrigin(selected);
+					}
+				} else if (objectRotation == ObjectRotation.OBJECT_CENTER) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateClockwiseAroundCenter(selected);
+					}
+				} else if (objectRotation == ObjectRotation.DOT) {
+					String selected = jListObjects.getSelectedValue();
+					double x = Double.parseDouble(txtXRotation.getText());
+					double y = Double.parseDouble(txtYRotation.getText());
+					Coordinate dot = new Coordinate(x, y);
+					for (IGraphicSystem listener : listeners) {
+						listener.rotateClockwiseAroundPoint(selected, dot);
+					}
+				}
+			}
+		});
 		btnTurnRight.setIcon(new ImageIcon("img/Arrow-turn-right-icon.png"));
 		panelWindow.add(btnTurnRight, "cell 2 2");
 
@@ -455,7 +501,7 @@ public class Layout implements ILayout {
 	}
 	
 	public static final String SELECT_A_OBJECT = "Selecione um objeto!";
-
+	
 	private void scalePlus() {
 		String selected = jListObjects.getSelectedValue();
 		if (selected == null) {

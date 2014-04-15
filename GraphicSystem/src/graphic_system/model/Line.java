@@ -139,21 +139,43 @@ public class Line extends Geometry {
 	}
 
 	@Override
-	public void objectRotation() {
-		// TODO Auto-generated method stub
-
+	public void rotateClockwiseAroundOrigin() {
+		a.rotateClockwiseAroundOrigin();
+		b.rotateClockwiseAroundOrigin();
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundOrigin() {
+		a.rotateAntiClockwiseAroundOrigin();
+		b.rotateAntiClockwiseAroundOrigin();
+	}
+	
+	@Override
+	public void rotateClockwiseAroundCenter() {
+		Coordinate center = this.getCenter();
+		this.rotateClockwiseAroundPoint(center);
+	}
+	
+	@Override
+	public void rotateAntiClockwiseAroundCenter() {
+		Coordinate center = this.getCenter();
+		this.rotateAntiClockwiseAroundPoint(center);;
+	}
+	@Override
+	public void rotateClockwiseAroundPoint(Coordinate coordinate) {
+		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
+		this.transform(rotationMatrix);
 	}
 
 	@Override
-	public void worldRotation(Window window, Viewport viewport) {
-		// TODO Auto-generated method stub
-
+	public void rotateAntiClockwiseAroundPoint(Coordinate coordinate) {
+		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
+		this.transform(rotationMatrix);
 	}
-
-	@Override
-	public void dotRatation(Coordinate dot) {
-		// TODO Auto-generated method stub
-
+	
+	private void transform(double[][] matrix){
+		a.transform(matrix);
+		b.transform(matrix);
 	}
 
 }
