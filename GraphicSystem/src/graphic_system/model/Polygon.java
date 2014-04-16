@@ -40,36 +40,7 @@ public class Polygon extends Geometry {
 	}
 
 	@Override
-	public Coordinate getCenter() {
-		int points = vertices.size();
-		Coordinate[] polygon = new Coordinate[points];
-
-		for (int q = 0; q < points; q++) {
-			polygon[q] = new Coordinate(vertices.get(q).getX(), vertices.get(q)
-					.getY());
-		}
-
-		double cx = 0, cy = 0;
-		double A = getArea();
-		int i, j;
-
-		double factor = 0;
-		for (i = 0; i < points; i++) {
-			j = (i + 1) % points;
-			factor = (polygon[i].getX() * polygon[j].getY() - polygon[j].getX()
-					* polygon[i].getY());
-			cx += (polygon[i].getX() + polygon[j].getX()) * factor;
-			cy += (polygon[i].getY() + polygon[j].getY()) * factor;
-		}
-
-		factor = 1.0 / (6.0 * A);
-		cx *= factor;
-		cy *= factor;
-		return new Coordinate((int) Math.abs(Math.round(cx)),
-				(int) Math.abs(Math.round(cy)));
-	}
-	
-	public Coordinate getCentre(){
+	public Coordinate getCenter(){
 		double x_sum = 0;
 		double y_sum = 0;
 		
