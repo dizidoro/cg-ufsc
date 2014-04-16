@@ -38,4 +38,15 @@ public class DisplayFile {
 		return null;
 	}
 
+	public void rotateLeft(Coordinate coordinate) {
+		for (Geometry object : objects) {
+			object.rotateClockwiseAroundPoint(coordinate);
+		}
+	}
+
+	public void rotateRight(Coordinate coordinate) {
+		for (Geometry object : objects) {
+			object.rotateAntiClockwiseAroundPoint(coordinate);
+		}
+	}
 }

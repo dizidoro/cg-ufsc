@@ -83,4 +83,9 @@ public class Window {
 		return xMin + "," + yMin + " " + xMax + "," + yMax;
 	}
 
+	public Coordinate getCenter() {
+		double x = (xMax - xMin) / 2;
+		double y = (yMax - yMin) / 2;
+		return new Coordinate(x, y);
+	}
 }

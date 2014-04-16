@@ -4,7 +4,6 @@ import graphic_system.model.Coordinate;
 import graphic_system.model.Geometry;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -476,6 +474,9 @@ public class Layout implements ILayout {
 		JButton btnTurnLeft = new JButton("");
 		btnTurnLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				for (IGraphicSystem listener : listeners) {
+					listener.rotateWindowLeft();
+				}
 				
 			}
 		});
@@ -496,6 +497,9 @@ public class Layout implements ILayout {
 		JButton btnTurnRight = new JButton("");
 		btnTurnRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				for (IGraphicSystem listener : listeners) {
+					listener.rotateWindowRight();
+				}
 				
 			}
 		});

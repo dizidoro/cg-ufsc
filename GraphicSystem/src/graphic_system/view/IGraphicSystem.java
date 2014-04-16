@@ -39,4 +39,8 @@ public interface IGraphicSystem {
 	
 	void rotateAntiClockwiseAroundPoint(String objectName, Coordinate dot);
 
+	void rotateWindowRight();
+
+	void rotateWindowLeft();
+
 }

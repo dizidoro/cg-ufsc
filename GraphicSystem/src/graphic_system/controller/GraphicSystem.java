@@ -165,4 +165,21 @@ public class GraphicSystem implements IGraphicSystem {
 				.getObjects());
 	}
 
+	@Override
+	public void rotateWindowRight() {
+		// Rotaciona mundo em torno do ponto que é centro da window
+		displayFile.rotateRight(window.getCenter());
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+		
+	}
+
+	@Override
+	public void rotateWindowLeft() {
+		// Rotaciona mundo em torno do ponto que é centro da window
+		displayFile.rotateLeft(window.getCenter());
+		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
+				.getObjects());
+	}
+
 }
