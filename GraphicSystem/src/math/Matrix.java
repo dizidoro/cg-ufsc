@@ -1,7 +1,8 @@
 package math;
 
 public class Matrix {
-	public static double[][] multiplyMatrix(double[][] a, double[][] b){
+	
+	public static double[][] multiply(double[][] a, double[][] b){
 		int a_row_size = a[0].length;
 		int b_column_size = b.length;
 
@@ -17,8 +18,6 @@ public class Matrix {
 			for(int j = 0; j < number_of_columns; j++){
 				double[] a_line = a[i];
 				double[] b_column = getColumn(b, j);
-//				System.out.println();
-//				System.out.println("i,j: "+i+","+j);
 				c[i][j] = dotProduct(a_line, b_column);
 			}
 		}
@@ -40,10 +39,6 @@ public class Matrix {
 	private static double dotProduct(double[] line, double[] column){
 		if(line.length != column.length)
 			System.out.println("size of line must be equal to the size of the column!");
-//		printArray(line);
-//		System.out.println();
-//		printArray(column);
-		
 		
 		int size = line.length;
 		

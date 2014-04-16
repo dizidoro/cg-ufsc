@@ -53,36 +53,8 @@ public class Dot extends Geometry {
 	}
 
 	@Override
-	public void rotateClockwiseAroundCenter() {
-		// Um ponto rotacionado sobre ele mesmo fica no mesmo ponto
-		// Nada pra fazer aqui
-	}
-	
-	@Override
-	public void rotateAntiClockwiseAroundCenter() {
-		// Um ponto rotacionado sobre ele mesmo fica no mesmo ponto
-		// Nada pra fazer aqui
-	}
-
-	@Override
-	public void rotateClockwiseAroundOrigin() {
-		coordinate.rotateClockwiseAroundOrigin();
-	}
-	
-	public void rotateAntiClockwiseAroundOrigin(){
-		coordinate.rotateAntiClockwiseAroundOrigin();
-	}
-
-	@Override
-	public void rotateClockwiseAroundPoint(Coordinate rotationCoordinate) {
-		double[][] rotationMatrix = getClockwiseRotationMatrix(rotationCoordinate);
-		coordinate.transform(rotationMatrix);
-	}
-
-	@Override
-	public void rotateAntiClockwiseAroundPoint(Coordinate rotationCoordinate) {
-		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(rotationCoordinate);
-		coordinate.transform(rotationMatrix);
+	protected void transform(double[][] transformationMatrix) {
+		coordinate.transform(transformationMatrix);
 	}
 
 

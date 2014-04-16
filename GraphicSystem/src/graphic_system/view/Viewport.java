@@ -31,7 +31,7 @@ public class Viewport extends JPanel {
 //		int height = (int) (yMax - yMin);
 //		int width = (int) (xMax - xMin);
 //		this.setSize(width, height);
-		this.setSize(500, 500);
+		this.setSize(800, 800);
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class Viewport extends JPanel {
 
 			drawing = true;
 			Point p = e.getPoint();
-			p1 = new Coordinate(p.x, p.y, 0);
+			p1 = new Coordinate(p.x, p.y);
 			p2 = p1;
 
 			repaint();
@@ -223,7 +223,7 @@ public class Viewport extends JPanel {
 
 			drawing = false;
 			Point p = e.getPoint();
-			p2 = new Coordinate(p.x, p.y, 0);
+			p2 = new Coordinate(p.x, p.y);
 			line = new Line(p1, p2, colorTool);
 			addNewObject(line);
 
@@ -236,7 +236,7 @@ public class Viewport extends JPanel {
 
 			if (drawing) {
 				Point p = e.getPoint();
-				p2 = new Coordinate(p.x, p.y, 0);
+				p2 = new Coordinate(p.x, p.y);
 				repaint();
 			}
 		}
@@ -270,7 +270,7 @@ public class Viewport extends JPanel {
 			System.out.println("polygon: mouse pressed");
 
 			Point p = e.getPoint();
-			polygonClicks.add(new Coordinate(p.x, p.y, 0));
+			polygonClicks.add(new Coordinate(p.x, p.y));
 
 			repaint();
 		}

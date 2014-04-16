@@ -5,7 +5,12 @@ import java.awt.Color;
 import math.Matrix;
 
 public abstract class Geometry {
-
+	
+	protected static final Coordinate origin = new Coordinate(0,0);
+	
+	private static final double CLOCKWISE_DEGREE = 10;
+	private static final double ANTI_CLOCKWISE_DEGREE = 350;
+	
 	private final String name;
 	private final Type type;
 	private Color color;
@@ -15,6 +20,10 @@ public abstract class Geometry {
 		this.type = type;
 		this.color = color;
 	}
+	
+	public enum Type {
+		POINT, LINE, POLYGON
+	}
 
 	public String getName() {
 		return name;
@@ -23,33 +32,6 @@ public abstract class Geometry {
 	public Type getType() {
 		return type;
 	}
-
-	public abstract Geometry getWindowViewportTransformation(Window window,
-			Viewport viewport);
-
-	public enum Type {
-		POINT, LINE, POLYGON
-	}
-
-	public abstract Coordinate getCenter();
-
-	public abstract void setCenter(Coordinate center);
-
-	public abstract void scaleLess();
-
-	public abstract void scalePlus();
-
-	public abstract void rotateClockwiseAroundCenter();
-	
-	public abstract void rotateAntiClockwiseAroundCenter();
-	
-	public abstract void rotateClockwiseAroundOrigin();
-	
-	public abstract void rotateAntiClockwiseAroundOrigin();
-
-	public abstract void rotateClockwiseAroundPoint(Coordinate coordinate);
-	
-	public abstract void rotateAntiClockwiseAroundPoint(Coordinate coordinate);
 	
 	public Color getColor() {
 		return color;
@@ -58,46 +40,76 @@ public abstract class Geometry {
 	public void setColor(Color color) {
 		this.color = color;
 	}
+
+	public abstract Geometry getWindowViewportTransformation(Window window,
+			Viewport viewport);
+
+	public abstract Coordinate getCenter();
+
+	public abstract void setCenter(Coordinate center);
+
+	public abstract void scaleLess();
+
+	public abstract void scalePlus();
 	
-	protected static double[][] getClockwiseRotationMatrix(Coordinate coordinate){
-		return getRotationMatrix(coordinate, 10);
+	protected abstract void transform(double[][] transformationMatrix);
+	
+	public void rotateClockwiseAroundOrigin() {
+		this.rotateClockwiseAroundPoint(origin);
 	}
 	
-	protected static double[][] getAntiClockwiseRotationMatrix(Coordinate coordinate){
-		return getRotationMatrix(coordinate, 350);
+	public void rotateAntiClockwiseAroundOrigin() {
+		this.rotateAntiClockwiseAroundPoint(origin);
+	}
+
+	public void rotateClockwiseAroundCenter() {
+		this.rotateClockwiseAroundPoint(getCenter());
+	}
+	
+	public void rotateAntiClockwiseAroundCenter() {
+		this.rotateAntiClockwiseAroundPoint(getCenter());
+	}
+	
+	public void rotateClockwiseAroundPoint(Coordinate coordinate) {
+		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
+		this.transform(rotationMatrix);
+	}
+
+	public void rotateAntiClockwiseAroundPoint(Coordinate coordinate) {
+		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
+		this.transform(rotationMatrix);
+	}
+	
+	private static double[][] getClockwiseRotationMatrix(Coordinate coordinate){
+		return getRotationMatrix(coordinate, CLOCKWISE_DEGREE);
+	}
+	
+	private static double[][] getAntiClockwiseRotationMatrix(Coordinate coordinate){
+		return getRotationMatrix(coordinate, ANTI_CLOCKWISE_DEGREE);
 	}
 	
 	private static double[][] getRotationMatrix(Coordinate coordinate, double degree){
-		double[][] moveToCenter = {
-				{1,0,0},
-				{0,1,0},
-				{-coordinate.getX(),-coordinate.getY(), 1}
-		};
+		final double cos = Math.cos(Math.toRadians(degree));
+		final double sin = Math.sin(Math.toRadians(degree));
+		
+		final double[][] rotation = {
+				{cos, -sin, 0},
+				{sin, cos, 0},
+				{0, 0, 1}};
+		
+		final double[][] moveToCenter = {
+				{1, 0, 0},
+				{0, 1, 0},
+				{-coordinate.getX(), -coordinate.getY(), 1}};
 
 		
-		double[][] returnFromCenter = {
-				{1,0,0},
-				{0,1,0},
-				{coordinate.getX(),coordinate.getY(), 1}
-		};
+		final double[][] returnFromCenter = {
+				{1, 0, 0},
+				{0, 1, 0},
+				{coordinate.getX(), coordinate.getY(), 1}};
 		
-		double cos = Math.cos(Math.toRadians(degree));
-		double sin = Math.sin(Math.toRadians(degree));
-//		System.out.println("cos: " + cos);
-//		System.out.println("sin: " + sin);
-		
-		double[][] rotation = {
-				{cos,-sin,0},
-				{sin,cos,0},
-				{0,0,1}
-		};
-		double[][] moveAndRotate = Matrix.multiplyMatrix(moveToCenter, rotation);
-	
-		double[][] rotationMatrix = Matrix.multiplyMatrix(moveAndRotate, returnFromCenter);
-		
-//		System.out.println();
-//		System.out.println("Rotation matrix");
-//		Matrix.printMatrix(rotationMatrix);
+		final double[][] moveAndRotate = Matrix.multiply(moveToCenter, rotation);
+		final double[][] rotationMatrix = Matrix.multiply(moveAndRotate, returnFromCenter);
 		
 		return rotationMatrix;
 	}

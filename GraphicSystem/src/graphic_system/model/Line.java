@@ -43,34 +43,6 @@ public class Line extends Geometry {
 		return new Line(this.getName(), viewportA, viewportB, this.getColor());
 	}
 
-	// XXX: Tentativa de corrigir quando desenha com zoom
-	//
-	// @Override
-	// public Geometry getWindowViewportTransformation(Window window,
-	// Viewport viewport, double zoom) {
-	// System.out.println("Zoom: " + zoom);
-	// Coordinate viewportA = a.getWindowViewportTransformation(window,
-	// viewport);
-	// Coordinate viewportB = b.getWindowViewportTransformation(window,
-	// viewport);
-	// if (a.getX() - b.getX() < 0) {
-	// viewportA.setX(viewportA.getX() - zoom);
-	// viewportB.setX(viewportB.getX() + zoom);
-	// } else {
-	// viewportA.setX(viewportA.getX() + zoom);
-	// viewportB.setX(viewportB.getX() - zoom);
-	// }
-	//
-	// if (a.getY() - b.getY() < 0) {
-	// viewportA.setY(viewportA.getY() + zoom);
-	// viewportB.setY(viewportB.getY() - zoom);
-	// } else {
-	// viewportA.setY(viewportA.getY() - zoom);
-	// viewportB.setY(viewportB.getY() + zoom);
-	// }
-	// return new Line(this.getName(), viewportA, viewportB);
-	// }
-
 	@Override
 	public Coordinate getCenter() {
 		double x = (a.getX() + b.getX()) / 2;
@@ -137,43 +109,9 @@ public class Line extends Geometry {
 
 		setCenter(center);
 	}
-
-	@Override
-	public void rotateClockwiseAroundOrigin() {
-		a.rotateClockwiseAroundOrigin();
-		b.rotateClockwiseAroundOrigin();
-	}
 	
 	@Override
-	public void rotateAntiClockwiseAroundOrigin() {
-		a.rotateAntiClockwiseAroundOrigin();
-		b.rotateAntiClockwiseAroundOrigin();
-	}
-	
-	@Override
-	public void rotateClockwiseAroundCenter() {
-		Coordinate center = this.getCenter();
-		this.rotateClockwiseAroundPoint(center);
-	}
-	
-	@Override
-	public void rotateAntiClockwiseAroundCenter() {
-		Coordinate center = this.getCenter();
-		this.rotateAntiClockwiseAroundPoint(center);;
-	}
-	@Override
-	public void rotateClockwiseAroundPoint(Coordinate coordinate) {
-		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
-		this.transform(rotationMatrix);
-	}
-
-	@Override
-	public void rotateAntiClockwiseAroundPoint(Coordinate coordinate) {
-		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
-		this.transform(rotationMatrix);
-	}
-	
-	private void transform(double[][] matrix){
+	protected void transform(double[][] matrix){
 		a.transform(matrix);
 		b.transform(matrix);
 	}

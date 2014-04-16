@@ -68,6 +68,21 @@ public class Polygon extends Geometry {
 		return new Coordinate((int) Math.abs(Math.round(cx)),
 				(int) Math.abs(Math.round(cy)));
 	}
+	
+	public Coordinate getCentre(){
+		double x_sum = 0;
+		double y_sum = 0;
+		
+		for(Coordinate vertice : vertices){
+			x_sum += vertice.getX();
+			y_sum += vertice.getY();
+		}
+		
+		final double x = x_sum/vertices.size();
+		final double y = y_sum/vertices.size();
+		
+		return new Coordinate(x, y);
+	}
 
 	@Override
 	public void setCenter(Coordinate center) {
@@ -96,10 +111,8 @@ public class Polygon extends Geometry {
 
 	@Override
 	public void scaleLess() {
-		// Movo para a origem e multiplico pelo fator de escala
-		// Em seguida volto o objeto para o centro antigo
 		Coordinate center = getCenter();
-		setCenter(new Coordinate(0, 0));
+		setCenter(origin);
 
 		double factor = 1 / ApplicationConfig.OBJECT_SCALE_FACTOR;
 		for (int i = 0; i < vertices.size(); i++) {
@@ -129,47 +142,8 @@ public class Polygon extends Geometry {
 		setCenter(center);
 	}
 
-
 	@Override
-	public void rotateClockwiseAroundOrigin() {
-		for(Coordinate vertice : vertices){
-			vertice.rotateClockwiseAroundOrigin();
-		}
-
-	}
-	
-	@Override
-	public void rotateAntiClockwiseAroundOrigin() {
-		for(Coordinate vertice : vertices){
-			vertice.rotateAntiClockwiseAroundOrigin();
-		}
-	}
-
-	@Override
-	public void rotateClockwiseAroundCenter() {
-		Coordinate center = this.getCenter();
-		this.rotateClockwiseAroundPoint(center);
-	}
-	
-	@Override
-	public void rotateAntiClockwiseAroundCenter() {
-		Coordinate center = this.getCenter();
-		this.rotateAntiClockwiseAroundPoint(center);
-	}
-	
-	@Override
-	public void rotateClockwiseAroundPoint(Coordinate coordinate) {
-		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
-		this.transform(rotationMatrix);
-	}
-
-	@Override
-	public void rotateAntiClockwiseAroundPoint(Coordinate coordinate) {
-		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
-		this.transform(rotationMatrix);
-	}
-	
-	private void transform(double[][] matrix){
+	protected void transform(double[][] matrix){
 		for(Coordinate vertice : vertices){
 			vertice.transform(matrix);
 		}
