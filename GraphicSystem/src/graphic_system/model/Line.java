@@ -44,6 +44,16 @@ public class Line extends Geometry {
 	}
 
 	@Override
+	public Line getWindowViewportTransformationSCN(Window window,
+			Viewport viewport) {
+		Coordinate viewportA = a.getWindowViewportTransformationSCN(window,
+				viewport);
+		Coordinate viewportB = b.getWindowViewportTransformationSCN(window,
+				viewport);
+		return new Line(this.getName(), viewportA, viewportB, this.getColor());
+	}
+
+	@Override
 	public Coordinate getCenter() {
 		double x = (a.getX() + b.getX()) / 2;
 		double y = (a.getY() + b.getY()) / 2;
@@ -109,11 +119,17 @@ public class Line extends Geometry {
 
 		setCenter(center);
 	}
-	
+
 	@Override
-	protected void transform(double[][] matrix){
+	protected void transform(double[][] matrix) {
 		a.transform(matrix);
 		b.transform(matrix);
+	}
+
+	@Override
+	public void transformSCN(double[][] matrix) {
+		a.transformSCN(matrix);
+		b.transformSCN(matrix);
 	}
 
 }

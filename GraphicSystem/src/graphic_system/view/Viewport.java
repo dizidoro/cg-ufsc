@@ -28,9 +28,9 @@ public class Viewport extends JPanel {
 		double xMax = ApplicationConfig.initXMax;
 		double yMax = ApplicationConfig.initYMax;
 
-//		int height = (int) (yMax - yMin);
-//		int width = (int) (xMax - xMin);
-//		this.setSize(width, height);
+		// int height = (int) (yMax - yMin);
+		// int width = (int) (xMax - xMin);
+		// this.setSize(width, height);
 		this.setSize(800, 800);
 	}
 

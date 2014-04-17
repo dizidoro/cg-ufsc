@@ -83,6 +83,7 @@ public class Window {
 		return xMin + "," + yMin + " " + xMax + "," + yMax;
 	}
 
+	// A origem do SCN é definida como sendo o centro da window
 	public Coordinate getCenter() {
 		double x = (xMax - xMin) / 2;
 		double y = (yMax - yMin) / 2;

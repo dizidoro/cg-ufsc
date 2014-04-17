@@ -29,6 +29,17 @@ public class DisplayFile {
 		return viewportDisplayFile;
 	}
 
+	public DisplayFile getViewportDisplayFileSCN(Window window,
+			Viewport viewport) {
+		DisplayFile viewportDisplayFile = new DisplayFile();
+		for (Geometry object : objects) {
+			Geometry viewportObject = object
+					.getWindowViewportTransformationSCN(window, viewport);
+			viewportDisplayFile.add(viewportObject);
+		}
+		return viewportDisplayFile;
+	}
+
 	public Geometry getObject(String selected) {
 		for (Geometry object : objects) {
 			if (object.getName().equals(selected)) {
@@ -38,6 +49,7 @@ public class DisplayFile {
 		return null;
 	}
 
+	// Como verificar o q ta fora ou dentro da window?
 	public void rotateLeft(Coordinate coordinate) {
 		for (Geometry object : objects) {
 			object.rotateClockwiseAroundPoint(coordinate);

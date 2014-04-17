@@ -40,18 +40,18 @@ public class Polygon extends Geometry {
 	}
 
 	@Override
-	public Coordinate getCenter(){
+	public Coordinate getCenter() {
 		double x_sum = 0;
 		double y_sum = 0;
-		
-		for(Coordinate vertice : vertices){
+
+		for (Coordinate vertice : vertices) {
 			x_sum += vertice.getX();
 			y_sum += vertice.getY();
 		}
-		
-		final double x = x_sum/vertices.size();
-		final double y = y_sum/vertices.size();
-		
+
+		final double x = x_sum / vertices.size();
+		final double y = y_sum / vertices.size();
+
 		return new Coordinate(x, y);
 	}
 
@@ -114,10 +114,28 @@ public class Polygon extends Geometry {
 	}
 
 	@Override
-	protected void transform(double[][] matrix){
-		for(Coordinate vertice : vertices){
+	protected void transform(double[][] matrix) {
+		for (Coordinate vertice : vertices) {
 			vertice.transform(matrix);
 		}
+	}
+
+	@Override
+	public void transformSCN(double[][] matrix) {
+		for (Coordinate vertice : vertices) {
+			vertice.transformSCN(matrix);
+		}
+	}
+
+	@Override
+	public Geometry getWindowViewportTransformationSCN(Window window,
+			Viewport viewport) {
+		List<Coordinate> viewportVertices = new ArrayList<Coordinate>();
+		for (Coordinate vertice : vertices) {
+			viewportVertices.add(vertice.getWindowViewportTransformationSCN(
+					window, viewport));
+		}
+		return new Polygon(this.getName(), viewportVertices, this.getColor());
 	}
 
 }

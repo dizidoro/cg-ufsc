@@ -53,10 +53,21 @@ public class Dot extends Geometry {
 	}
 
 	@Override
-	protected void transform(double[][] transformationMatrix) {
-		coordinate.transform(transformationMatrix);
+	protected void transform(double[][] matrix) {
+		coordinate.transform(matrix);
 	}
 
+	@Override
+	public void transformSCN(double[][] matrix) {
+		coordinate.transformSCN(matrix);
+	}
 
+	@Override
+	public Dot getWindowViewportTransformationSCN(Window window,
+			Viewport viewport) {
+		Coordinate viewportCoordinate = coordinate
+				.getWindowViewportTransformationSCN(window, viewport);
+		return new Dot(this.getName(), viewportCoordinate, this.getColor());
+	}
 
 }

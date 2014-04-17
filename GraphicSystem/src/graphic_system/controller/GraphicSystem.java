@@ -6,7 +6,8 @@ import graphic_system.model.DisplayFile;
 import graphic_system.model.Geometry;
 import graphic_system.model.Viewport;
 import graphic_system.model.Window;
-import graphic_system.view.*;
+import graphic_system.view.IGraphicSystem;
+import graphic_system.view.Layout;
 
 import java.util.List;
 
@@ -88,13 +89,15 @@ public class GraphicSystem implements IGraphicSystem {
 	public void getCenter(String objectName) {
 		Geometry object = displayFile.getObject(objectName);
 		Coordinate center = object.getCenter();
-		this.gui.fill(Integer.toString((int) center.getX()), Double.toString((int) center.getY()));
+		this.gui.fill(Integer.toString((int) center.getX()),
+				Double.toString((int) center.getY()));
 	}
 
 	@Override
 	public void setCenter(String objectName, String x, String y) {
 		Geometry object = displayFile.getObject(objectName);
-		Coordinate center = new Coordinate(Double.parseDouble(x), Double.parseDouble(y));
+		Coordinate center = new Coordinate(Double.parseDouble(x),
+				Double.parseDouble(y));
 		object.setCenter(center);
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
@@ -114,7 +117,7 @@ public class GraphicSystem implements IGraphicSystem {
 		object.scalePlus();
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
-		
+
 	}
 
 	@Override
@@ -124,7 +127,7 @@ public class GraphicSystem implements IGraphicSystem {
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
 	}
-	
+
 	@Override
 	public void rotateAntiClockwiseAroundOrigin(String objectName) {
 		Geometry object = displayFile.getObject(objectName);
@@ -140,7 +143,7 @@ public class GraphicSystem implements IGraphicSystem {
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
 	}
-	
+
 	@Override
 	public void rotateAntiClockwiseAroundCenter(String objectName) {
 		Geometry object = displayFile.getObject(objectName);
@@ -156,7 +159,7 @@ public class GraphicSystem implements IGraphicSystem {
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
 	}
-	
+
 	@Override
 	public void rotateAntiClockwiseAroundPoint(String objectName, Coordinate dot) {
 		Geometry object = displayFile.getObject(objectName);
@@ -171,7 +174,7 @@ public class GraphicSystem implements IGraphicSystem {
 		displayFile.rotateRight(window.getCenter());
 		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
 				.getObjects());
-		
+
 	}
 
 	@Override

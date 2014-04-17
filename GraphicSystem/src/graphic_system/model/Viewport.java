@@ -1,6 +1,7 @@
 package graphic_system.model;
 
 public class Viewport {
+	
 	private final double xMin, yMin, xMax, yMax;
 
 	public Viewport(double xMin, double yMin, double xMax, double yMax) {

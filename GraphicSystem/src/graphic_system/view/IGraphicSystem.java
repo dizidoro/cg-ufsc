@@ -28,15 +28,15 @@ public interface IGraphicSystem {
 	void scalePlus(String objectName);
 
 	void rotateClockwiseAroundOrigin(String objectName);
-	
+
 	void rotateAntiClockwiseAroundOrigin(String objectName);
 
 	void rotateClockwiseAroundCenter(String objectName);
-	
+
 	void rotateAntiClockwiseAroundCenter(String objectName);
 
 	void rotateClockwiseAroundPoint(String objectName, Coordinate dot);
-	
+
 	void rotateAntiClockwiseAroundPoint(String objectName, Coordinate dot);
 
 	void rotateWindowRight();
