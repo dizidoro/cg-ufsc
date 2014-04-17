@@ -51,6 +51,7 @@ public class Dot extends Geometry {
 	public void scalePlus() {
 		// Um ponto escalado �� ele mesmo
 	}
+	
 
 	@Override
 	protected void transform(double[][] matrix) {
@@ -68,6 +69,12 @@ public class Dot extends Geometry {
 		Coordinate viewportCoordinate = coordinate
 				.getWindowViewportTransformationSCN(window, viewport);
 		return new Dot(this.getName(), viewportCoordinate, this.getColor());
+	}
+
+	@Override
+	protected Geometry getTransformed(double[][] transformationMatrix) {
+		Coordinate transformedCoordinate = coordinate.getTransformed(transformationMatrix);
+		return new Dot(name, transformedCoordinate, color);
 	}
 
 }

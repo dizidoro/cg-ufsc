@@ -55,30 +55,45 @@ public class Polygon extends Geometry {
 		return new Coordinate(x, y);
 	}
 
+//	@Override
+//	public void setCenter(Coordinate center) {
+//		Coordinate oldCenter = getCenter();
+//		double xDiff = center.getX() - oldCenter.getX();
+//		double yDiff = center.getY() - oldCenter.getY();
+//		for (Coordinate vertice : vertices) {
+//			vertice.setX(vertice.getX() + xDiff);
+//			vertice.setY(vertice.getY() + yDiff);
+//		}
+//	}
+	
 	@Override
 	public void setCenter(Coordinate center) {
 		Coordinate oldCenter = getCenter();
 		double xDiff = center.getX() - oldCenter.getX();
 		double yDiff = center.getY() - oldCenter.getY();
-		for (int i = 0; i < vertices.size(); i++) {
-			Coordinate coordinate = vertices.get(i);
-			coordinate.setX(coordinate.getX() + xDiff);
-			coordinate.setY(coordinate.getY() + yDiff);
+		
+		List<Coordinate> transformedVertices = new ArrayList<>();
+		for (Coordinate vertice : vertices) {
+			double transformedX = vertice.getX() + xDiff;
+			double transformedY = vertice.getY() + yDiff;
+			Coordinate coordinate = new Coordinate(transformedX, transformedY);
+			transformedVertices.add(coordinate);
 		}
+		vertices = transformedVertices;
 	}
 
-	public double getArea() {
-		int i, j;
-		double area = 0;
-		int points = vertices.size();
-		for (i = 0; i < points; i++) {
-			j = (i + 1) % points;
-			area += vertices.get(i).getX() * vertices.get(j).getY();
-			area -= vertices.get(i).getY() * vertices.get(j).getX();
-		}
-		area /= 2.0;
-		return (Math.abs(area));
-	}
+//	public double getArea() {
+//		int i, j;
+//		double area = 0;
+//		int points = vertices.size();
+//		for (i = 0; i < points; i++) {
+//			j = (i + 1) % points;
+//			area += vertices.get(i).getX() * vertices.get(j).getY();
+//			area -= vertices.get(i).getY() * vertices.get(j).getX();
+//		}
+//		area /= 2.0;
+//		return (Math.abs(area));
+//	}
 
 	@Override
 	public void scaleLess() {
@@ -91,9 +106,7 @@ public class Polygon extends Geometry {
 			coordinate.setX(coordinate.getX() * factor);
 			coordinate.setY(coordinate.getY() * factor);
 		}
-
 		setCenter(center);
-
 	}
 
 	@Override
@@ -115,9 +128,7 @@ public class Polygon extends Geometry {
 
 	@Override
 	protected void transform(double[][] matrix) {
-		for (Coordinate vertice : vertices) {
-			vertice.transform(matrix);
-		}
+		vertices = this.getTransformedVertices(matrix);
 	}
 
 	@Override
@@ -136,6 +147,21 @@ public class Polygon extends Geometry {
 					window, viewport));
 		}
 		return new Polygon(this.getName(), viewportVertices, this.getColor());
+	}
+
+	@Override
+	protected Geometry getTransformed(double[][] transformationMatrix) {
+		List<Coordinate> transformedVertices = this.getTransformedVertices(transformationMatrix);
+		return new Polygon(name, transformedVertices, color);
+	}
+	
+	private List<Coordinate> getTransformedVertices(double[][] transformationMatrix){
+		List<Coordinate> transformedVertices = new ArrayList<>();
+		for (Coordinate vertice : vertices) {
+			Coordinate transformedVertice = vertice.getTransformed(transformationMatrix);
+			transformedVertices.add(transformedVertice);
+		}
+		return transformedVertices;
 	}
 
 }

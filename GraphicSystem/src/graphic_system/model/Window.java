@@ -3,6 +3,7 @@ package graphic_system.model;
 public class Window {
 
 	private double xMin, yMin, xMax, yMax;
+	private double angle = 0;
 
 	// reduces size to 80% of original
 	private final double zoomInPercentage = 80;
@@ -77,13 +78,25 @@ public class Window {
 		xMin -= moveDistance;
 		xMax -= moveDistance;
 	}
+	
+	public void rotateClockwise(){
+		angle += 10; 
+	}
+	
+	public void rotateAnticlockwise(){
+		angle += 350;
+	}
+	
+	public double getAngle(){
+		return angle;
+	}
 
 	@Override
 	public String toString() {
 		return xMin + "," + yMin + " " + xMax + "," + yMax;
 	}
 
-	// A origem do SCN é definida como sendo o centro da window
+	// A origem do SCN �� definida como sendo o centro da window
 	public Coordinate getCenter() {
 		double x = (xMax - xMin) / 2;
 		double y = (yMax - yMin) / 2;

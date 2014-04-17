@@ -71,11 +71,10 @@ public class Line extends Geometry {
 		double ay = a.getY() + yDiff;
 		double bx = b.getX() + xDiff;
 		double by = b.getY() + yDiff;
+		
+		a = new Coordinate(ax, ay);
+		b = new Coordinate(bx, by);
 
-		a.setX(ax);
-		a.setY(ay);
-		b.setX(bx);
-		b.setY(by);
 	}
 
 	@Override
@@ -91,10 +90,8 @@ public class Line extends Geometry {
 		double bx = b.getX() * factor;
 		double by = b.getY() * factor;
 
-		a.setX(ax);
-		a.setY(ay);
-		b.setX(bx);
-		b.setY(by);
+		a = new Coordinate(ax, ay);
+		b = new Coordinate(bx, by);
 
 		setCenter(center);
 	}
@@ -112,10 +109,8 @@ public class Line extends Geometry {
 		double bx = b.getX() * factor;
 		double by = b.getY() * factor;
 
-		a.setX(ax);
-		a.setY(ay);
-		b.setX(bx);
-		b.setY(by);
+		a = new Coordinate(ax, ay);
+		b = new Coordinate(bx, by);
 
 		setCenter(center);
 	}
@@ -130,6 +125,13 @@ public class Line extends Geometry {
 	public void transformSCN(double[][] matrix) {
 		a.transformSCN(matrix);
 		b.transformSCN(matrix);
+	}
+
+	@Override
+	protected Geometry getTransformed(double[][] transformationMatrix) {
+		Coordinate transformedA = a.getTransformed(transformationMatrix);
+		Coordinate transformedB = b.getTransformed(transformationMatrix);
+		return new Line(name, transformedA, transformedB, color);
 	}
 
 }

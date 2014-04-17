@@ -42,8 +42,19 @@ public class Coordinate {
 		return z;
 	}
 
+
 	public Coordinate getWindowViewportTransformation(Window window,
 			Viewport viewport) {
+		return getWindowViewportTransformation(window, viewport, x, y);
+	}
+	
+	public Coordinate getWindowViewportTransformationSCN(Window window,
+			Viewport viewport) {
+		return getWindowViewportTransformation(window, viewport, xScn, yScn);
+	}
+	
+	private static Coordinate getWindowViewportTransformation(Window window,
+			Viewport viewport, double x, double y) {
 		double viewportX = (x - window.getXMin())
 				/ (window.getXMax() - window.getXMin())
 				* (viewport.getXMax() - viewport.getXMin());
@@ -51,19 +62,9 @@ public class Coordinate {
 				.getXMin()))) * (viewport.getYMax() - viewport.getYMin());
 		return new Coordinate(viewportX, viewportY);
 	}
-
-	public Coordinate getWindowViewportTransformationSCN(Window window,
-			Viewport viewport) {
-		double viewportX = (xScn - window.getXMin())
-				/ (window.getXMax() - window.getXMin())
-				* (viewport.getXMax() - viewport.getXMin());
-		double viewportY = (1 - ((yScn - window.getYMin()) / (window.getYMax() - window
-				.getXMin()))) * (viewport.getYMax() - viewport.getYMin());
-		return new Coordinate(viewportX, viewportY);
-	}
-
+	
 	public void transform(double[][] transformationMatrix) {
-		final double[][] coordinateMatrix = this.matrix();
+		final double[][] coordinateMatrix = matrix(x, y, z);
 		final double[][] transformedCoordinateMatrix = Matrix.multiply(
 				coordinateMatrix, transformationMatrix);
 
@@ -72,23 +73,15 @@ public class Coordinate {
 	}
 
 	public void transformSCN(double[][] transformationMatrix) {
-		final double[][] coordinateMatrix = this.matrixSCN();
+		final double[][] coordinateMatrix = matrix(xScn, yScn, zScn);
 		final double[][] transformedCoordinateMatrix = Matrix.multiply(
 				coordinateMatrix, transformationMatrix);
 
 		xScn = transformedCoordinateMatrix[0][0];
 		xScn = transformedCoordinateMatrix[0][1];
 	}
-
-	private double[][] matrixSCN() {
-		double[][] coordinateMatrix = new double[1][3];
-		coordinateMatrix[0][0] = xScn;
-		coordinateMatrix[0][1] = yScn;
-		coordinateMatrix[0][2] = zScn;
-		return coordinateMatrix;
-	}
-
-	private double[][] matrix() {
+	
+	private static double[][] matrix(double x, double y, double z){
 		double[][] coordinateMatrix = new double[1][3];
 		coordinateMatrix[0][0] = x;
 		coordinateMatrix[0][1] = y;
@@ -100,24 +93,25 @@ public class Coordinate {
 		return xScn;
 	}
 
-	public void setXScn(double xScn) {
-		this.xScn = xScn;
-	}
-
 	public double getYScn() {
 		return yScn;
 	}
 
-	public void setYScn(double yScn) {
-		this.yScn = yScn;
-	}
 
 	public double getZScn() {
 		return zScn;
 	}
 
-	public void setZScn(double zScn) {
-		this.zScn = zScn;
+	public Coordinate getTransformed(double[][] transformationMatrix) {
+		final double[][] coordinateMatrix = matrix(x, y, z);
+		final double[][] transformedCoordinateMatrix = Matrix.multiply(
+				coordinateMatrix, transformationMatrix);
+
+		double transformedX = transformedCoordinateMatrix[0][0];
+		double transformedY = transformedCoordinateMatrix[0][1];
+		
+		return new Coordinate(transformedX, transformedY);
 	}
 
+		
 }

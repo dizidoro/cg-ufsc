@@ -10,6 +10,10 @@ public class DisplayFile {
 	public DisplayFile() {
 		this.objects = new ArrayList<Geometry>();
 	}
+	
+	private DisplayFile(List<Geometry> objects){
+		this.objects = objects;
+	}
 
 	public List<Geometry> getObjects() {
 		return objects;
@@ -60,5 +64,14 @@ public class DisplayFile {
 		for (Geometry object : objects) {
 			object.rotateAntiClockwiseAroundPoint(coordinate);
 		}
+	}
+
+	public DisplayFile getRotated(Coordinate coordinate, double angle) {
+		List<Geometry> rotatedObjects = new ArrayList<>();
+		for (Geometry object : objects) {
+			Geometry rotatedObject = object.getRotatedAroundPoint(coordinate, angle);
+			rotatedObjects.add(rotatedObject);
+		}
+		return new DisplayFile(rotatedObjects);
 	}
 }

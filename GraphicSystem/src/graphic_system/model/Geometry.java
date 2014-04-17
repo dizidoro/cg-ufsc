@@ -11,9 +11,9 @@ public abstract class Geometry {
 	private static final double CLOCKWISE_DEGREE = 10;
 	private static final double ANTI_CLOCKWISE_DEGREE = 350;
 
-	private final String name;
-	private final Type type;
-	private Color color;
+	protected final String name;
+	protected final Type type;
+	protected Color color;
 
 	public Geometry(String name, Type type, Color color) {
 		this.name = name;
@@ -53,7 +53,9 @@ public abstract class Geometry {
 	public abstract void scalePlus();
 
 	protected abstract void transform(double[][] transformationMatrix);
-
+	
+	protected abstract Geometry getTransformed(double[][] transformationMatrix);
+	
 	public void rotateClockwiseAroundOrigin() {
 		this.rotateClockwiseAroundPoint(origin);
 	}
@@ -90,9 +92,9 @@ public abstract class Geometry {
 	}
 
 	private static double[][] getRotationMatrix(Coordinate coordinate,
-			double degree) {
-		final double cos = Math.cos(Math.toRadians(degree));
-		final double sin = Math.sin(Math.toRadians(degree));
+			double angle) {
+		final double cos = Math.cos(Math.toRadians(angle));
+		final double sin = Math.sin(Math.toRadians(angle));
 
 		final double[][] rotation = { { cos, -sin, 0 }, { sin, cos, 0 },
 				{ 0, 0, 1 } };
@@ -125,5 +127,11 @@ public abstract class Geometry {
 
 	public abstract Geometry getWindowViewportTransformationSCN(Window window,
 			Viewport viewport);
+
+	public Geometry getRotatedAroundPoint(Coordinate coordinate,
+			double angle){
+		double [][] rotationMatrix = getRotationMatrix(coordinate, angle);
+		return getTransformed(rotationMatrix);
+	}
 
 }

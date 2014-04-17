@@ -316,32 +316,6 @@ public class Layout implements ILayout {
 		bgRotation.add(rdbtnObjectCenter);
 		bgRotation.add(rdbtnDot);
 
-//		JButton btnApply = new JButton("Apply");
-//		btnApply.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				if (objectRotation.equals(ObjectRotation.WORLD_CENTER)) {
-//					String selected = jListObjects.getSelectedValue();
-//					for (IGraphicSystem listener : listeners) {
-//						listener.rotateAntiClockwiseAroundOrigin(selected);
-//					}
-//				} else if (objectRotation.equals(ObjectRotation.OBJECT_CENTER)) {
-//					String selected = jListObjects.getSelectedValue();
-//					for (IGraphicSystem listener : listeners) {
-//						listener.rotateClockwiseAroundCenter(selected);
-//					}
-//				} else if (objectRotation.equals(ObjectRotation.DOT)) {
-//					String selected = jListObjects.getSelectedValue();
-//					double x = Double.parseDouble(txtXRotation.getText());
-//					double y = Double.parseDouble(txtYRotation.getText());
-//					Coordinate dot = new Coordinate(x, y);
-//					for (IGraphicSystem listener : listeners) {
-//						listener.dotRotation(selected, dot);
-//					}
-//				}
-//			}
-//		});
-//		panelRotation.add(btnApply, "cell 0 3");
-
 		JLabel lblXRotation = new JLabel("X:");
 		panelRotation.add(lblXRotation, "cell 0 2");
 
@@ -520,6 +494,7 @@ public class Layout implements ILayout {
 
 		frmComputerGraphics.setVisible(true);
 		frmComputerGraphics.pack();
+		
 	}
 	
 	public static final String SELECT_A_OBJECT = "Selecione um objeto!";
