@@ -83,7 +83,7 @@ public class Window {
 		angle += 10; 
 	}
 	
-	public void rotateAnticlockwise(){
+	public void rotateAntiClockwise(){
 		angle += 350;
 	}
 	

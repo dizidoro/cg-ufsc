@@ -33,173 +33,126 @@ public class GraphicSystem implements IGraphicSystem {
 
 	@Override
 	public void addNewObject(Geometry object) {
-		Geometry transformed = object.getWindowViewportTransformation(window,
-				viewport);
+		Geometry transformed = object.getWindowViewportTransformation(window,viewport);
 		displayFile.add(transformed);
 	}
 
 	@Override
 	public void zoomIn() {
 		window.zoomIn();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		redraw();
 	}
 
 	@Override
 	public void zoomOut() {
 		window.zoomOut();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		redraw();
 	}
 
 	@Override
 	public void moveUp() {
 		window.moveUp();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		redraw();
 	}
 
 	@Override
 	public void moveDown() {
 		window.moveDown();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		redraw();
 	}
 
 	@Override
 	public void moveRight() {
 		window.moveRight();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		redraw();
 	}
 
 	@Override
 	public void moveLeft() {
 		window.moveLeft();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
-	}
-
-	public List<Geometry> getObjects() {
-		return displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects();
+		redraw();
 	}
 
 	@Override
 	public void getCenter(String objectName) {
-		Geometry object = displayFile.getObject(objectName);
-		Coordinate center = object.getCenter();
-		this.gui.fill(Integer.toString((int) center.getX()),
+		Coordinate center = displayFile.getCenter(objectName);
+		gui.fill(Integer.toString((int) center.getX()),
 				Double.toString((int) center.getY()));
 	}
 
 	@Override
-	public void setCenter(String objectName, String x, String y) {
-		Geometry object = displayFile.getObject(objectName);
-		Coordinate center = new Coordinate(Double.parseDouble(x),
-				Double.parseDouble(y));
-		object.setCenter(center);
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+	public void setCenter(String objectName, String str_x, String str_y) {
+		double x = Double.parseDouble(str_x);
+		double y = Double.parseDouble(str_y);
+		displayFile.setCenter(objectName, x, y);
+		redraw();
 	}
 
 	@Override
 	public void scaleLess(String objectName) {
-		Geometry object = displayFile.getObject(objectName);
-		object.scaleLess();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		displayFile.scaleLess(objectName);
+		redraw();
 	}
 
 	@Override
 	public void scalePlus(String objectName) {
-		Geometry object = displayFile.getObject(objectName);
-		object.scalePlus();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
-
+		displayFile.scalePlus(objectName);
+		redraw();
 	}
 
 	@Override
 	public void rotateClockwiseAroundOrigin(String objectName) {
-		Geometry object = displayFile.getObject(objectName);
-		object.rotateClockwiseAroundOrigin();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		displayFile.rotateClockwiseAroundOrigin(objectName);
+		redraw();
 	}
 
 	@Override
 	public void rotateAntiClockwiseAroundOrigin(String objectName) {
-		Geometry object = displayFile.getObject(objectName);
-		object.rotateAntiClockwiseAroundOrigin();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		displayFile.rotateAntiClockwiseAroundOrigin(objectName);
+		redraw();
 	}
 
 	@Override
 	public void rotateClockwiseAroundCenter(String objectName) {
-		Geometry object = displayFile.getObject(objectName);
-		object.rotateClockwiseAroundCenter();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		displayFile.rotateClockwiseAroundCenter(objectName);
+		redraw();
 	}
 
 	@Override
 	public void rotateAntiClockwiseAroundCenter(String objectName) {
-		Geometry object = displayFile.getObject(objectName);
-		object.rotateAntiClockwiseAroundCenter();
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		displayFile.rotateAntiClockwiseAroundCenter(objectName);
+		redraw();
 	}
 
 	@Override
 	public void rotateClockwiseAroundPoint(String objectName, Coordinate dot) {
-		Geometry object = displayFile.getObject(objectName);
-		object.rotateClockwiseAroundPoint(dot);
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		displayFile.rotateClockwiseAroundPoint(objectName, dot);
+		redraw();
 	}
 
 	@Override
 	public void rotateAntiClockwiseAroundPoint(String objectName, Coordinate dot) {
-		Geometry object = displayFile.getObject(objectName);
-		object.rotateAntiClockwiseAroundPoint(dot);
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		displayFile.rotateAntiClockwiseAroundPoint(objectName, dot);
+		redraw();
 	}
-
-//	@Override
-//	public void rotateWindowRight() {
-//		// Rotaciona mundo em torno do ponto que �� centro da window
-//		displayFile.rotateRight(window.getCenter());
-//		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-//				.getObjects());
-//
-//	}
-//
-//	@Override
-//	public void rotateWindowLeft() {
-//		// Rotaciona mundo em torno do ponto que �� centro da window
-//		displayFile.rotateLeft(window.getCenter());
-//		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-//				.getObjects());
-//	}
 	
 	@Override
 	public void rotateWindowRight() {
-		// Rotaciona mundo em torno do ponto que �� centro da window
-		DisplayFile rotatedWorld = displayFile.getRotated(window.getCenter(), window.getAngle());
-		gui.redraw(rotatedWorld.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		window.rotateClockwise();
+		redraw();
 
 	}
 
 	@Override
 	public void rotateWindowLeft() {
-		// Rotaciona mundo em torno do ponto que �� centro da window
-		displayFile.rotateLeft(window.getCenter());
-		gui.redraw(displayFile.getViewportDisplayFile(window, viewport)
-				.getObjects());
+		window.rotateAntiClockwise();
+		redraw();
 	}
-
+	
+	private void redraw(){
+		DisplayFile rotatedWorld = displayFile.getRotated(window.getCenter(), window.getAngle());
+		DisplayFile viewportDisplayFile = rotatedWorld.getViewportDisplayFile(window, viewport);
+		List<Geometry> objects = viewportDisplayFile.getObjects();
+		gui.redraw(objects);
+	}
 }

@@ -33,37 +33,13 @@ public class DisplayFile {
 		return viewportDisplayFile;
 	}
 
-	public DisplayFile getViewportDisplayFileSCN(Window window,
-			Viewport viewport) {
-		DisplayFile viewportDisplayFile = new DisplayFile();
-		for (Geometry object : objects) {
-			Geometry viewportObject = object
-					.getWindowViewportTransformationSCN(window, viewport);
-			viewportDisplayFile.add(viewportObject);
-		}
-		return viewportDisplayFile;
-	}
-
 	public Geometry getObject(String selected) {
 		for (Geometry object : objects) {
-			if (object.getName().equals(selected)) {
+			if (object.getName() == selected) {
 				return object;
 			}
 		}
 		return null;
-	}
-
-	// Como verificar o q ta fora ou dentro da window?
-	public void rotateLeft(Coordinate coordinate) {
-		for (Geometry object : objects) {
-			object.rotateClockwiseAroundPoint(coordinate);
-		}
-	}
-
-	public void rotateRight(Coordinate coordinate) {
-		for (Geometry object : objects) {
-			object.rotateAntiClockwiseAroundPoint(coordinate);
-		}
 	}
 
 	public DisplayFile getRotated(Coordinate coordinate, double angle) {
@@ -73,5 +49,57 @@ public class DisplayFile {
 			rotatedObjects.add(rotatedObject);
 		}
 		return new DisplayFile(rotatedObjects);
+	}
+
+	public void scaleLess(String objectName) {
+		Geometry object = getObject(objectName);
+		object.scaleLess();
+	}
+
+	public void scalePlus(String objectName) {
+		Geometry object = getObject(objectName);
+		object.scalePlus();
+	}
+
+	public void rotateClockwiseAroundOrigin(String objectName) {
+		Geometry object = getObject(objectName);
+		object.rotateClockwiseAroundOrigin();
+	}
+
+	public void rotateAntiClockwiseAroundOrigin(String objectName) {
+		Geometry object = getObject(objectName);
+		object.rotateAntiClockwiseAroundOrigin();
+	}
+
+	public void rotateClockwiseAroundCenter(String objectName) {
+		Geometry object = getObject(objectName);
+		object.rotateClockwiseAroundCenter();
+	}
+
+	public void rotateAntiClockwiseAroundCenter(String objectName) {
+		Geometry object = getObject(objectName);
+		object.rotateAntiClockwiseAroundCenter();
+	}
+
+	public void rotateClockwiseAroundPoint(String objectName, Coordinate dot) {
+		Geometry object = getObject(objectName);
+		object.rotateClockwiseAroundPoint(dot);
+	}
+
+	public void rotateAntiClockwiseAroundPoint(String objectName, Coordinate dot) {
+		Geometry object = getObject(objectName);
+		object.rotateAntiClockwiseAroundPoint(dot);
+	}
+	
+	public Coordinate getCenter(String objectName) {
+		Geometry object = getObject(objectName);
+		Coordinate center = object.getCenter();
+		return center;
+	}
+	
+	public void setCenter(String objectName, double x, double y) {
+		Geometry object = getObject(objectName);
+		Coordinate center = new Coordinate(x,y);
+		object.setCenter(center);
 	}
 }
