@@ -33,7 +33,8 @@ public class GraphicSystem implements IGraphicSystem {
 
 	@Override
 	public void addNewObject(Geometry object) {
-		Geometry transformed = object.getWindowViewportTransformation(window,viewport);
+		Geometry transformed = object.getWindowViewportTransformation(window,
+				viewport);
 		displayFile.add(transformed);
 	}
 
@@ -135,7 +136,7 @@ public class GraphicSystem implements IGraphicSystem {
 		displayFile.rotateAntiClockwiseAroundPoint(objectName, dot);
 		redraw();
 	}
-	
+
 	@Override
 	public void rotateWindowRight() {
 		window.rotateClockwise();
@@ -149,10 +150,35 @@ public class GraphicSystem implements IGraphicSystem {
 		redraw();
 	}
 	
-	private void redraw(){
-		DisplayFile rotatedWorld = displayFile.getRotated(window.getCenter(), window.getAngle());
-		DisplayFile viewportDisplayFile = rotatedWorld.getViewportDisplayFile(window, viewport);
+	private void redraw() {
+		DisplayFile rotatedWorld = displayFile.getRotatedClipped(window.getCenter(),
+				window.getAngle(), window);
+		DisplayFile viewportDisplayFile = rotatedWorld.getViewportDisplayFile(
+				window, viewport);
 		List<Geometry> objects = viewportDisplayFile.getObjects();
+		for (Geometry object : objects) {
+			System.out.println("-> " + object.getName());
+		}
 		gui.redraw(objects);
 	}
+
+	// private void redraw() {
+	// DisplayFile clippedWorld = displayFile.getClipping(window);
+	// DisplayFile viewportDisplayFile = clippedWorld.getViewportDisplayFile(
+	// window, viewport);
+	// List<Geometry> objects = viewportDisplayFile.getObjects();
+	// for (Geometry object : objects) {
+	// System.out.println("-> " + object.getName());
+	// }
+	// gui.redraw(objects);
+	// }
+
+	// private void redraw(){
+	// DisplayFile rotatedWorld = displayFile.getRotated(window.getCenter(),
+	// window.getAngle());
+	// DisplayFile viewportDisplayFile =
+	// rotatedWorld.getViewportDisplayFile(window, viewport);
+	// List<Geometry> objects = viewportDisplayFile.getObjects();
+	// gui.redraw(objects);
+	// }
 }

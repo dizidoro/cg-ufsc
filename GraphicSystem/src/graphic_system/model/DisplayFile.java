@@ -10,8 +10,8 @@ public class DisplayFile {
 	public DisplayFile() {
 		this.objects = new ArrayList<Geometry>();
 	}
-	
-	private DisplayFile(List<Geometry> objects){
+
+	private DisplayFile(List<Geometry> objects) {
 		this.objects = objects;
 	}
 
@@ -45,8 +45,34 @@ public class DisplayFile {
 	public DisplayFile getRotated(Coordinate coordinate, double angle) {
 		List<Geometry> rotatedObjects = new ArrayList<>();
 		for (Geometry object : objects) {
-			Geometry rotatedObject = object.getRotatedAroundPoint(coordinate, angle);
+			Geometry rotatedObject = object.getRotatedAroundPoint(coordinate,
+					angle);
 			rotatedObjects.add(rotatedObject);
+		}
+		return new DisplayFile(rotatedObjects);
+	}
+
+	public DisplayFile getClipping(Window window) {
+		List<Geometry> clippedObjects = new ArrayList<>();
+		for (Geometry object : objects) {
+			Geometry clipped = object.getClipping(window);
+			if (clipped != null) {
+				clippedObjects.add(clipped);
+			}
+		}
+		return new DisplayFile(clippedObjects);
+	}
+
+	public DisplayFile getRotatedClipped(Coordinate coordinate, double angle,
+			Window window) {
+		List<Geometry> rotatedObjects = new ArrayList<>();
+		for (Geometry object : objects) {
+			Geometry rotatedObject = object.getRotatedAroundPoint(coordinate,
+					angle);
+			Geometry clipped = rotatedObject.getClipping(window);
+			if (clipped != null) {
+				rotatedObjects.add(clipped);
+			}
 		}
 		return new DisplayFile(rotatedObjects);
 	}
@@ -90,16 +116,16 @@ public class DisplayFile {
 		Geometry object = getObject(objectName);
 		object.rotateAntiClockwiseAroundPoint(dot);
 	}
-	
+
 	public Coordinate getCenter(String objectName) {
 		Geometry object = getObject(objectName);
 		Coordinate center = object.getCenter();
 		return center;
 	}
-	
+
 	public void setCenter(String objectName, double x, double y) {
 		Geometry object = getObject(objectName);
-		Coordinate center = new Coordinate(x,y);
+		Coordinate center = new Coordinate(x, y);
 		object.setCenter(center);
 	}
 }

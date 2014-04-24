@@ -48,7 +48,7 @@ public class Layout implements ILayout {
 	private JTextField txtXRotation;
 	private JTextField txtYRotation;
 
-	private ObjectRotation objectRotation;
+	private ObjectRotation objectRotation = ObjectRotation.WORLD_CENTER;
 
 	enum ObjectRotation {
 		WORLD_CENTER, OBJECT_CENTER, DOT
@@ -294,6 +294,7 @@ public class Layout implements ILayout {
 			}
 		});
 		panelRotation.add(rdbtnWorldCenter, "cell 0 0");
+		rdbtnWorldCenter.setSelected(true);
 
 		JRadioButton rdbtnObjectCenter = new JRadioButton("Object center");
 		rdbtnObjectCenter.addActionListener(new ActionListener() {

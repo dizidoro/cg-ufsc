@@ -44,12 +44,12 @@ public class Dot extends Geometry {
 
 	@Override
 	public void scaleLess() {
-		// Um ponto escalado �� ele mesmo
+		// Um ponto escalado é ele mesmo
 	}
 
 	@Override
 	public void scalePlus() {
-		// Um ponto escalado �� ele mesmo
+		// Um ponto escalado é ele mesmo
 	}
 	
 
@@ -75,6 +75,16 @@ public class Dot extends Geometry {
 	protected Geometry getTransformed(double[][] transformationMatrix) {
 		Coordinate transformedCoordinate = coordinate.getTransformed(transformationMatrix);
 		return new Dot(name, transformedCoordinate, color);
+	}
+
+	@Override
+	public Geometry getClipping(Window window) {
+		RegionCode code = coordinate.getRegionCode(window);
+		if (code.all == 0 && code.all == 0) { 
+			// A linha está toda contida na window, então desenha!
+			return this;
+		}
+		return null;
 	}
 
 }

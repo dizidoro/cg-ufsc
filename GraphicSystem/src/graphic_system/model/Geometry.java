@@ -133,5 +133,26 @@ public abstract class Geometry {
 		double [][] rotationMatrix = getRotationMatrix(coordinate, angle);
 		return getTransformed(rotationMatrix);
 	}
+	
+	public RegionCode getRegionCode(Coordinate coordinate, Window window) {
+		RegionCode code = new RegionCode();
+		if (coordinate.getY() > window.getYMax()) {
+			code.top = 1;
+			code.all += 8;
+		} else if (coordinate.getY() < window.getYMin()) {
+			code.bottom = 1;
+			code.all += 4;
+		}
+		if (coordinate.getX() > window.getXMax()) {
+			code.right = 1;
+			code.all += 2;
+		} else if (coordinate.getX() < window.getXMin()) {
+			code.left = 1;
+			code.all += 1;
+		}
+		return code;
+	}
+
+	public abstract Geometry getClipping(Window window);
 
 }
