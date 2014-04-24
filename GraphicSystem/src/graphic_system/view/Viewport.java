@@ -51,6 +51,7 @@ public class Viewport extends JPanel {
 
 	private Geometry.Type graphicTool = null;
 	private Color colorTool = Color.BLACK;
+	private boolean redraw = false;
 
 	// Seta a ferramenta e carrega o listener associado
 	public void setGraphicTool(Geometry.Type graphicTool) {
@@ -120,7 +121,7 @@ public class Viewport extends JPanel {
 		g2d.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND,
 				BasicStroke.JOIN_BEVEL));
 
-		if (!objects.isEmpty()) {
+		if (!objects.isEmpty() || redraw) {
 			super.paintComponent(g);
 
 			for (Geometry object : objects) {
@@ -155,6 +156,7 @@ public class Viewport extends JPanel {
 				}
 			}
 			objects = Collections.emptyList();
+			redraw = false;
 			return;
 		}
 
@@ -311,6 +313,7 @@ public class Viewport extends JPanel {
 	List<Geometry> objects = new ArrayList<>();
 
 	public void redraw(List<Geometry> objects) {
+		redraw = true;
 		this.objects = objects;
 		repaint();
 	}
