@@ -55,23 +55,23 @@ public class Polygon extends Geometry {
 		return new Coordinate(x, y);
 	}
 
-//	@Override
-//	public void setCenter(Coordinate center) {
-//		Coordinate oldCenter = getCenter();
-//		double xDiff = center.getX() - oldCenter.getX();
-//		double yDiff = center.getY() - oldCenter.getY();
-//		for (Coordinate vertice : vertices) {
-//			vertice.setX(vertice.getX() + xDiff);
-//			vertice.setY(vertice.getY() + yDiff);
-//		}
-//	}
-	
+	// @Override
+	// public void setCenter(Coordinate center) {
+	// Coordinate oldCenter = getCenter();
+	// double xDiff = center.getX() - oldCenter.getX();
+	// double yDiff = center.getY() - oldCenter.getY();
+	// for (Coordinate vertice : vertices) {
+	// vertice.setX(vertice.getX() + xDiff);
+	// vertice.setY(vertice.getY() + yDiff);
+	// }
+	// }
+
 	@Override
 	public void setCenter(Coordinate center) {
 		Coordinate oldCenter = getCenter();
 		double xDiff = center.getX() - oldCenter.getX();
 		double yDiff = center.getY() - oldCenter.getY();
-		
+
 		List<Coordinate> transformedVertices = new ArrayList<>();
 		for (Coordinate vertice : vertices) {
 			double transformedX = vertice.getX() + xDiff;
@@ -82,18 +82,18 @@ public class Polygon extends Geometry {
 		vertices = transformedVertices;
 	}
 
-//	public double getArea() {
-//		int i, j;
-//		double area = 0;
-//		int points = vertices.size();
-//		for (i = 0; i < points; i++) {
-//			j = (i + 1) % points;
-//			area += vertices.get(i).getX() * vertices.get(j).getY();
-//			area -= vertices.get(i).getY() * vertices.get(j).getX();
-//		}
-//		area /= 2.0;
-//		return (Math.abs(area));
-//	}
+	// public double getArea() {
+	// int i, j;
+	// double area = 0;
+	// int points = vertices.size();
+	// for (i = 0; i < points; i++) {
+	// j = (i + 1) % points;
+	// area += vertices.get(i).getX() * vertices.get(j).getY();
+	// area -= vertices.get(i).getY() * vertices.get(j).getX();
+	// }
+	// area /= 2.0;
+	// return (Math.abs(area));
+	// }
 
 	@Override
 	public void scaleLess() {
@@ -151,17 +151,36 @@ public class Polygon extends Geometry {
 
 	@Override
 	protected Geometry getTransformed(double[][] transformationMatrix) {
-		List<Coordinate> transformedVertices = this.getTransformedVertices(transformationMatrix);
+		List<Coordinate> transformedVertices = this
+				.getTransformedVertices(transformationMatrix);
 		return new Polygon(name, transformedVertices, color);
 	}
-	
-	private List<Coordinate> getTransformedVertices(double[][] transformationMatrix){
+
+	private List<Coordinate> getTransformedVertices(
+			double[][] transformationMatrix) {
 		List<Coordinate> transformedVertices = new ArrayList<>();
 		for (Coordinate vertice : vertices) {
-			Coordinate transformedVertice = vertice.getTransformed(transformationMatrix);
+			Coordinate transformedVertice = vertice
+					.getTransformed(transformationMatrix);
 			transformedVertices.add(transformedVertice);
 		}
 		return transformedVertices;
+	}
+
+	@Override
+	public Geometry getClipping(Window window) {
+		boolean inner = false;
+		for (Coordinate vertice : vertices) {
+			RegionCode code = vertice.getRegionCode(window);
+			// TODO
+			// Se tem um vértice dentro da window,
+			// precisamos calcular o clipping
+			if (code.all == 0) {
+				inner = true;
+				return this;
+			}
+		}
+		return null;
 	}
 
 }
