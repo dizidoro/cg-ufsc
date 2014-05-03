@@ -22,7 +22,7 @@ public abstract class Geometry {
 	}
 
 	public enum Type {
-		POINT, LINE, POLYGON
+		POINT, LINE, POLYGON, CURVE
 	}
 
 	public String getName() {

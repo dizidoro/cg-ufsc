@@ -41,16 +41,16 @@ public class Polygon extends Geometry {
 
 	@Override
 	public Coordinate getCenter() {
-		double x_sum = 0;
-		double y_sum = 0;
+		double xSum = 0;
+		double ySum = 0;
 
 		for (Coordinate vertice : vertices) {
-			x_sum += vertice.getX();
-			y_sum += vertice.getY();
+			ySum += vertice.getX();
+			ySum += vertice.getY();
 		}
 
-		final double x = x_sum / vertices.size();
-		final double y = y_sum / vertices.size();
+		final double x = ySum / vertices.size();
+		final double y = ySum / vertices.size();
 
 		return new Coordinate(x, y);
 	}

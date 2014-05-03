@@ -2,6 +2,7 @@ package graphic_system.view;
 
 import graphic_system.ApplicationConfig;
 import graphic_system.model.Coordinate;
+import graphic_system.model.Curve;
 import graphic_system.model.Dot;
 import graphic_system.model.Geometry;
 import graphic_system.model.Line;
@@ -28,10 +29,10 @@ public class Viewport extends JPanel {
 		double xMax = ApplicationConfig.initXMax;
 		double yMax = ApplicationConfig.initYMax;
 
-		// int height = (int) (yMax - yMin);
-		// int width = (int) (xMax - xMin);
-		// this.setSize(width, height);
-		this.setSize(800, 800);
+		int height = (int) (yMax - yMin);
+		int width = (int) (xMax - xMin);
+		this.setSize(width, height);
+		// this.setSize(800, 800);
 	}
 
 	/**
@@ -42,12 +43,14 @@ public class Viewport extends JPanel {
 	private MouseHandlerDot mouseHandlerDot = new MouseHandlerDot();
 	private MouseHandlerLine mouseHandlerLine = new MouseHandlerLine();
 	private MouseHandlerPolygon mouseHandlerPolygon = new MouseHandlerPolygon();
+	private MouseHandlerCurve mouseHandlerCurve = new MouseHandlerCurve();
 	private MovingAdapter mouseDraggin = new MovingAdapter();
 
 	private Coordinate p1;
 	private Coordinate p2;
 	private boolean drawing = false;
 	ArrayList<Coordinate> polygonClicks = new ArrayList<>();
+	ArrayList<Coordinate> curveClicks = new ArrayList<>();
 
 	private Geometry.Type graphicTool = null;
 	private Color colorTool = Color.BLACK;
@@ -95,6 +98,8 @@ public class Viewport extends JPanel {
 			this.addMouseListener(mouseDraggin);
 		} else if (graphicTool.equals(Geometry.Type.POLYGON)) {
 			this.addMouseListener(mouseHandlerPolygon);
+		} else if (graphicTool.equals(Geometry.Type.CURVE)) {
+			this.addMouseListener(mouseHandlerCurve);
 		}
 	}
 
@@ -105,6 +110,8 @@ public class Viewport extends JPanel {
 			this.removeMouseListener(mouseHandlerLine);
 		} else if (this.graphicTool.equals(Geometry.Type.POLYGON)) {
 			this.removeMouseListener(mouseHandlerPolygon);
+		} else if (this.graphicTool.equals(Geometry.Type.CURVE)) {
+			this.removeMouseListener(mouseHandlerCurve);
 		}
 	}
 
@@ -115,7 +122,7 @@ public class Viewport extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 
-		// TODO: Tornar isso configur��vel
+		// TODO: Tornar isso configurável
 		Graphics2D g2d = (Graphics2D) g;
 		g.setColor(colorTool);
 		g2d.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND,
@@ -153,6 +160,11 @@ public class Viewport extends JPanel {
 						yPoints[i] = (int) coordinate.getY();
 					}
 					g.drawPolygon(xPoints, yPoints, nPoints);
+				} else if (object.getType().equals(Geometry.Type.CURVE)) {
+					Curve curve = (Curve) object;
+					ArrayList<Coordinate> coordinates = (ArrayList<Coordinate>) curve
+							.getCoordinates();
+					drawBezierCurve(g, coordinates);
 				}
 			}
 			objects = Collections.emptyList();
@@ -185,8 +197,73 @@ public class Viewport extends JPanel {
 				yPoints[i] = (int) coordinate.getY();
 			}
 			g.drawPolygon(xPoints, yPoints, nPoints);
+
+		} else if (graphicTool.equals(Geometry.Type.CURVE)) {
+			drawBezierCurve(g, curveClicks);
+			curveClicks.clear();
 		}
 
+	}
+	
+	private void drawBezierCurve(Graphics g, List<Coordinate> coordinates) {
+		int nPoints = coordinates.size();
+		double xPoints[] = new double[nPoints];
+		double yPoints[] = new double[nPoints];
+		for (int i = 0; i < nPoints; i++) {
+			xPoints[i] = coordinates.get(i).getX();
+			yPoints[i] = coordinates.get(i).getY();
+		}
+
+		int i = 0;
+		while (i + 3 < nPoints) {
+			double rangeX, rangeY, step;
+
+			if (xPoints[i + 3] - xPoints[i] < 0) {
+				rangeX = -(xPoints[i + 3] - xPoints[i]);
+			} else {
+				rangeX = xPoints[i + 3] - xPoints[i];
+			}
+
+			if (yPoints[i + 3] - yPoints[i] < 0) {
+				rangeY = -(yPoints[i + 3] - yPoints[i]);
+			} else {
+				rangeY = yPoints[i + 3] - yPoints[i];
+			}
+
+			if (rangeX > rangeY) {
+				step = 1 / rangeX;
+			} else {
+				step = 1 / rangeY;
+			}
+
+			double x = 0, y = 0, xPrevious = 0, yPrevious = 0;
+			for (double t = 0; t <= 1; t += step) {
+				x = (((-1 * Math.pow(t, 3) + 3 * Math.pow(t, 2) - 3 * t + 1)
+						* xPoints[i]
+						+ (3 * Math.pow(t, 3) - 6 * Math.pow(t, 2) + 3 * t)
+						* xPoints[i + 1]
+						+ (-3 * Math.pow(t, 3) + 3 * Math.pow(t, 2))
+						* xPoints[i + 2] + (1 * Math.pow(t, 3))
+						* xPoints[i + 3]));
+				y = (((-1 * Math.pow(t, 3) + 3 * Math.pow(t, 2) - 3 * t + 1)
+						* yPoints[i]
+						+ (3 * Math.pow(t, 3) - 6 * Math.pow(t, 2) + 3 * t)
+						* yPoints[i + 1]
+						+ (-3 * Math.pow(t, 3) + 3 * Math.pow(t, 2))
+						* yPoints[i + 2] + (1 * Math.pow(t, 3))
+						* yPoints[i + 3]));
+				if (t == 0) {
+					xPrevious = x;
+					yPrevious = y;
+				} else {
+					g.drawLine((int) xPrevious, (int) yPrevious, (int) x,
+							(int) y);
+					xPrevious = x;
+					yPrevious = y;
+				}
+			}
+			i += 3;
+		}
 	}
 
 	private class MouseHandlerDot extends MouseAdapter {
@@ -253,13 +330,7 @@ public class Viewport extends JPanel {
 			System.out.println("polygon: mouse clicked");
 
 			if (e.getClickCount() == 2) {
-
-				ArrayList<Coordinate> coordinates = new ArrayList<>();
-				for (int i = 0; i < polygonClicks.size(); i++) {
-					coordinates.add(polygonClicks.get(i));
-				}
-
-				Polygon polygon = new Polygon(coordinates, colorTool);
+				Polygon polygon = new Polygon(polygonClicks, colorTool);
 				addNewObject(polygon);
 
 				repaint();
@@ -286,27 +357,47 @@ public class Viewport extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-
 			x = e.getX();
 			y = e.getY();
 		}
 
 		@Override
 		public void mouseDragged(MouseEvent e) {
-
 			int dx = e.getX() - x;
 			int dy = e.getY() - y;
 
 			if (line != null) {
-
 				line.getA().setX(dx);
-				;
 				line.getB().setY(dy);
 				repaint();
 			}
 
 			x += dx;
 			y += dy;
+		}
+	}
+
+	private class MouseHandlerCurve extends MouseAdapter {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("curve: mouse clicked");
+
+			if (e.getClickCount() == 2) {
+				Curve curve = new Curve(curveClicks, colorTool);
+				addNewObject(curve);
+
+				repaint();
+			}
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("curve: mouse pressed");
+
+			Point p = e.getPoint();
+			curveClicks.add(new Coordinate(p.x, p.y));
 		}
 	}
 
