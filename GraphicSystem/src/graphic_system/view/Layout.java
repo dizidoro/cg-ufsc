@@ -113,7 +113,8 @@ public class Layout implements ILayout {
 				viewport.setGraphicTool(Geometry.Type.POINT);
 			}
 		});
-		panelTools.setLayout(new MigLayout("", "[34px,grow][34px][34px]", "[10px][grow]"));
+		panelTools.setLayout(new MigLayout("", "[34px][34px][34px][34px][]",
+				"[10px][grow]"));
 		drawButtons.add(tglbtnPencil);
 		panelTools.add(tglbtnPencil, "cell 0 0,alignx left,aligny top");
 
@@ -146,12 +147,28 @@ public class Layout implements ILayout {
 			}
 		});
 		drawButtons.add(tglbtnPolygon);
-		panelTools.add(tglbtnPolygon, "cell 2 0,alignx left,aligny top");
-		
+		panelTools.add(tglbtnPolygon, "flowx,cell 2 0,alignx left,aligny top");
+
+		final JToggleButton tglbtnCurve = new JToggleButton("");
+		tglbtnCurve.setIcon(new ImageIcon("img/Bezier-Curve-icon.png"));
+		tglbtnCurve.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (JToggleButton jToggleButton : drawButtons) {
+					jToggleButton.setSelected(false);
+				}
+				tglbtnCurve.setSelected(true);
+				viewport.setGraphicTool(Geometry.Type.CURVE);
+			}
+		});
+		drawButtons.add(tglbtnCurve);
+		panelTools.add(tglbtnCurve, "flowx,cell 3 0,alignx left,aligny top");
+
 		JPanel panelColors = new JPanel();
-		panelColors.setBorder(new TitledBorder(null, "Color", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTools.add(panelColors, "cell 0 1 3 1,grow");
-		
+		panelColors.setBorder(new TitledBorder(null, "Color",
+				TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelTools.add(panelColors, "cell 0 1 4 1,grow");
+
 		JButton btnBlack = new JButton("");
 		btnBlack.setBackground(Color.BLACK);
 		btnBlack.addActionListener(new ActionListener() {
@@ -160,7 +177,7 @@ public class Layout implements ILayout {
 			}
 		});
 		panelColors.add(btnBlack);
-		
+
 		JButton btnBlue = new JButton("");
 		btnBlue.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -170,7 +187,7 @@ public class Layout implements ILayout {
 		btnBlue.setBounds(0, 0, 30, 30);
 		btnBlue.setBackground(Color.BLUE);
 		panelColors.add(btnBlue);
-		
+
 		JButton btnGreen = new JButton("");
 		btnGreen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -179,7 +196,7 @@ public class Layout implements ILayout {
 		});
 		btnGreen.setBackground(Color.GREEN);
 		panelColors.add(btnGreen);
-		
+
 		JButton btnYellow = new JButton("");
 		btnYellow.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -188,7 +205,7 @@ public class Layout implements ILayout {
 		});
 		btnYellow.setBackground(Color.YELLOW);
 		panelColors.add(btnYellow);
-		
+
 		JButton btnRed = new JButton("");
 		btnRed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -198,6 +215,24 @@ public class Layout implements ILayout {
 		btnRed.setBackground(Color.RED);
 		panelColors.add(btnRed);
 		
+		JButton btnPink = new JButton("");
+		btnPink.setBackground(Color.PINK);
+		btnPink.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.PINK);
+			}
+		});
+		panelColors.add(btnPink);
+		
+		JButton btnGray = new JButton("");
+		btnGray.setBackground(Color.GRAY);
+		btnGray.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.GRAY);
+			}
+		});
+		panelColors.add(btnGray);
+
 		JPanel panelObjects = new JPanel();
 		panelObjects.setBorder(new TitledBorder(new LineBorder(new Color(184,
 				207, 229)), "Objects", TitledBorder.LEADING, TitledBorder.TOP,
@@ -330,7 +365,7 @@ public class Layout implements ILayout {
 		txtYRotation = new JTextField();
 		panelRotation.add(txtYRotation, "cell 0 2");
 		txtYRotation.setColumns(10);
-		
+
 		JButton btnLeft = new JButton("");
 		btnLeft.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -359,7 +394,7 @@ public class Layout implements ILayout {
 		});
 		btnLeft.setIcon(new ImageIcon("img/Arrow-turn-left-icon.png"));
 		panelRotation.add(btnLeft, "flowx,cell 0 3,alignx center");
-		
+
 		JButton btnRight = new JButton("");
 		btnRight.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -391,7 +426,7 @@ public class Layout implements ILayout {
 		panelWindow.setBorder(new TitledBorder(null, "Window",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelMenu.add(panelWindow, "cell 0 3,growx,aligny bottom");
-		panelWindow.setLayout(new MigLayout("", "[][][]", "[][][]"));
+		panelWindow.setLayout(new MigLayout("", "[grow][][][][grow]", "[][][]"));
 
 		JButton btnZoomOut = new JButton("");
 		btnZoomOut.setIcon(new ImageIcon("img/zoom-out-icon.png"));
@@ -402,7 +437,7 @@ public class Layout implements ILayout {
 				}
 			}
 		});
-		panelWindow.add(btnZoomOut, "cell 0 0");
+		panelWindow.add(btnZoomOut, "cell 1 0,alignx right");
 
 		JButton btnMoveUp = new JButton("");
 		btnMoveUp.addActionListener(new ActionListener() {
@@ -413,7 +448,7 @@ public class Layout implements ILayout {
 			}
 		});
 		btnMoveUp.setIcon(new ImageIcon("img/Arrows-Up-icon32.png"));
-		panelWindow.add(btnMoveUp, "cell 1 0");
+		panelWindow.add(btnMoveUp, "cell 2 0,alignx center");
 
 		JButton btnZoomIn = new JButton("");
 		btnZoomIn.setIcon(new ImageIcon("img/zoom-in-icon.png"));
@@ -424,7 +459,7 @@ public class Layout implements ILayout {
 				}
 			}
 		});
-		panelWindow.add(btnZoomIn, "cell 2 0");
+		panelWindow.add(btnZoomIn, "cell 3 0,alignx center");
 
 		JButton btnMoveLeft = new JButton("");
 		btnMoveLeft.addActionListener(new ActionListener() {
@@ -435,7 +470,7 @@ public class Layout implements ILayout {
 			}
 		});
 		btnMoveLeft.setIcon(new ImageIcon("img/Arrows-Left-icon32.png"));
-		panelWindow.add(btnMoveLeft, "cell 0 1");
+		panelWindow.add(btnMoveLeft, "cell 1 1,alignx center");
 
 		JButton btnMoveRight = new JButton("");
 		btnMoveRight.addActionListener(new ActionListener() {
@@ -446,7 +481,7 @@ public class Layout implements ILayout {
 			}
 		});
 		btnMoveRight.setIcon(new ImageIcon("img/Arrows-Right-icon32.png"));
-		panelWindow.add(btnMoveRight, "cell 2 1");
+		panelWindow.add(btnMoveRight, "cell 3 1,alignx center");
 
 		JButton btnTurnLeft = new JButton("");
 		btnTurnLeft.addActionListener(new ActionListener() {
@@ -454,11 +489,11 @@ public class Layout implements ILayout {
 				for (IGraphicSystem listener : listeners) {
 					listener.rotateWindowLeft();
 				}
-				
+
 			}
 		});
 		btnTurnLeft.setIcon(new ImageIcon("img/Arrow-turn-left-icon.png"));
-		panelWindow.add(btnTurnLeft, "cell 0 2");
+		panelWindow.add(btnTurnLeft, "cell 1 2,alignx center");
 
 		JButton btnMoveDown = new JButton("");
 		btnMoveDown.addActionListener(new ActionListener() {
@@ -469,7 +504,7 @@ public class Layout implements ILayout {
 			}
 		});
 		btnMoveDown.setIcon(new ImageIcon("img/Arrows-Down-icon32.png"));
-		panelWindow.add(btnMoveDown, "cell 1 2");
+		panelWindow.add(btnMoveDown, "cell 2 2,alignx center");
 
 		JButton btnTurnRight = new JButton("");
 		btnTurnRight.addActionListener(new ActionListener() {
@@ -477,11 +512,11 @@ public class Layout implements ILayout {
 				for (IGraphicSystem listener : listeners) {
 					listener.rotateWindowRight();
 				}
-				
+
 			}
 		});
 		btnTurnRight.setIcon(new ImageIcon("img/Arrow-turn-right-icon.png"));
-		panelWindow.add(btnTurnRight, "cell 2 2");
+		panelWindow.add(btnTurnRight, "cell 3 2,alignx center");
 
 		JMenuBar menuBar = new JMenuBar();
 		frmComputerGraphics.setJMenuBar(menuBar);
@@ -497,11 +532,11 @@ public class Layout implements ILayout {
 
 		frmComputerGraphics.setVisible(true);
 		frmComputerGraphics.pack();
-		
+
 	}
-	
+
 	public static final String SELECT_A_OBJECT = "Selecione um objeto!";
-	
+
 	private void scalePlus() {
 		String selected = jListObjects.getSelectedValue();
 		if (selected == null) {
