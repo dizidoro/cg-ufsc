@@ -1,6 +1,7 @@
 package graphic_system.view;
 
 import graphic_system.ApplicationConfig;
+import graphic_system.model.BSpline;
 import graphic_system.model.Coordinate;
 import graphic_system.model.Curve;
 import graphic_system.model.Dot;
@@ -44,6 +45,7 @@ public class Viewport extends JPanel {
 	private MouseHandlerLine mouseHandlerLine = new MouseHandlerLine();
 	private MouseHandlerPolygon mouseHandlerPolygon = new MouseHandlerPolygon();
 	private MouseHandlerCurve mouseHandlerCurve = new MouseHandlerCurve();
+	private MouseHandlerBSpline mouseHandlerBSpline = new MouseHandlerBSpline();
 	private MovingAdapter mouseDraggin = new MovingAdapter();
 
 	private Coordinate p1;
@@ -51,6 +53,9 @@ public class Viewport extends JPanel {
 	private boolean drawing = false;
 	ArrayList<Coordinate> polygonClicks = new ArrayList<>();
 	ArrayList<Coordinate> curveClicks = new ArrayList<>();
+	ArrayList<Coordinate> bSplineClicks = new ArrayList<>();
+
+	public int numControlDots = 4;
 
 	private Geometry.Type graphicTool = null;
 	private Color colorTool = Color.BLACK;
@@ -100,6 +105,8 @@ public class Viewport extends JPanel {
 			this.addMouseListener(mouseHandlerPolygon);
 		} else if (graphicTool.equals(Geometry.Type.CURVE)) {
 			this.addMouseListener(mouseHandlerCurve);
+		} else if (graphicTool.equals(Geometry.Type.BSPLINE)) {
+			this.addMouseListener(mouseHandlerBSpline);
 		}
 	}
 
@@ -112,6 +119,8 @@ public class Viewport extends JPanel {
 			this.removeMouseListener(mouseHandlerPolygon);
 		} else if (this.graphicTool.equals(Geometry.Type.CURVE)) {
 			this.removeMouseListener(mouseHandlerCurve);
+		} else if (this.graphicTool.equals(Geometry.Type.BSPLINE)) {
+			this.removeMouseListener(mouseHandlerBSpline);
 		}
 	}
 
@@ -165,6 +174,11 @@ public class Viewport extends JPanel {
 					ArrayList<Coordinate> coordinates = (ArrayList<Coordinate>) curve
 							.getCoordinates();
 					drawBezierCurve(g, coordinates);
+				} else if (object.getType().equals(Geometry.Type.BSPLINE)) {
+					BSpline curve = (BSpline) object;
+					ArrayList<Coordinate> coordinates = (ArrayList<Coordinate>) curve
+							.getCoordinates();
+					drawBSpline(g, coordinates, this.numControlDots);
 				}
 			}
 			objects = Collections.emptyList();
@@ -201,10 +215,13 @@ public class Viewport extends JPanel {
 		} else if (graphicTool.equals(Geometry.Type.CURVE)) {
 			drawBezierCurve(g, curveClicks);
 			curveClicks.clear();
+		} else if (graphicTool.equals(Geometry.Type.BSPLINE)) {
+			drawBSpline(g, bSplineClicks, this.numControlDots);
+			bSplineClicks.clear();
 		}
 
 	}
-	
+
 	private void drawBezierCurve(Graphics g, List<Coordinate> coordinates) {
 		int nPoints = coordinates.size();
 		double xPoints[] = new double[nPoints];
@@ -263,6 +280,45 @@ public class Viewport extends JPanel {
 				}
 			}
 			i += 3;
+		}
+	}
+
+	private void drawBSpline(Graphics g, List<Coordinate> coordinates,
+			int numControlDots) {
+		int n = coordinates.size();
+		double xA, yA, xB, yB, xC, yC, xD, yD;
+		double a0, a1, a2, a3, b0, b1, b2, b3;
+		double x = 0, y = 0, x0, y0;
+		boolean first = true;
+		for (int i = 1; i < n - 2; i++) {
+			xA = coordinates.get(i - 1).getX();
+			xB = coordinates.get(i).getX();
+			xC = coordinates.get(i + 1).getX();
+			xD = coordinates.get(i + 2).getX();
+			yA = coordinates.get(i - 1).getY();
+			yB = coordinates.get(i).getY();
+			yC = coordinates.get(i + 1).getY();
+			yD = coordinates.get(i + 2).getY();
+			a3 = (-xA + 3 * (xB - xC) + xD) / 6;
+			b3 = (-yA + 3 * (yB - yC) + yD) / 6;
+			a2 = (xA - 2 * xB + xC) / 2;
+			b2 = (yA - 2 * yB + yC) / 2;
+			a1 = (xC - xA) / 2;
+			b1 = (yC - yA) / 2;
+			a0 = (xA + 4 * xB + xC) / 6;
+			b0 = (yA + 4 * yB + yC) / 6;
+			for (int j = 0; j <= numControlDots; j++) {
+				x0 = x;
+				y0 = y;
+				double t = (float) j / numControlDots;
+				x = ((a3 * t + a2) * t + a1) * t + a0;
+				y = ((b3 * t + b2) * t + b1) * t + b0;
+				if (first) {
+					first = false;
+				} else {
+					g.drawLine((int) x0, (int) y0, (int) x, (int) y);
+				}
+			}
 		}
 	}
 
@@ -401,12 +457,40 @@ public class Viewport extends JPanel {
 		}
 	}
 
+	private class MouseHandlerBSpline extends MouseAdapter {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("curve: mouse clicked");
+
+			if (e.getClickCount() == 2) {
+				BSpline curve = new BSpline(bSplineClicks, colorTool);
+				addNewObject(curve);
+
+				repaint();
+			}
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("curve: mouse pressed");
+
+			Point p = e.getPoint();
+			bSplineClicks.add(new Coordinate(p.x, p.y));
+		}
+	}
+
 	List<Geometry> objects = new ArrayList<>();
 
 	public void redraw(List<Geometry> objects) {
 		redraw = true;
 		this.objects = objects;
 		repaint();
+	}
+
+	public void setNumControlDots(int numControlDots) {
+		this.numControlDots = numControlDots;
 	}
 
 }

@@ -22,7 +22,7 @@ public abstract class Geometry {
 	}
 
 	public enum Type {
-		POINT, LINE, POLYGON, CURVE
+		POINT, LINE, POLYGON, CURVE, BSPLINE
 	}
 
 	public String getName() {
@@ -53,9 +53,9 @@ public abstract class Geometry {
 	public abstract void scalePlus();
 
 	protected abstract void transform(double[][] transformationMatrix);
-	
+
 	protected abstract Geometry getTransformed(double[][] transformationMatrix);
-	
+
 	public void rotateClockwiseAroundOrigin() {
 		this.rotateClockwiseAroundPoint(origin);
 	}
@@ -128,12 +128,11 @@ public abstract class Geometry {
 	public abstract Geometry getWindowViewportTransformationSCN(Window window,
 			Viewport viewport);
 
-	public Geometry getRotatedAroundPoint(Coordinate coordinate,
-			double angle){
-		double [][] rotationMatrix = getRotationMatrix(coordinate, angle);
+	public Geometry getRotatedAroundPoint(Coordinate coordinate, double angle) {
+		double[][] rotationMatrix = getRotationMatrix(coordinate, angle);
 		return getTransformed(rotationMatrix);
 	}
-	
+
 	public RegionCode getRegionCode(Coordinate coordinate, Window window) {
 		RegionCode code = new RegionCode();
 		if (coordinate.getY() > window.getYMax()) {

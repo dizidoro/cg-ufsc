@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
@@ -88,7 +90,8 @@ public class Layout implements ILayout {
 
 		JPanel panelMenu = new JPanel();
 		frmComputerGraphics.getContentPane().add(panelMenu, "cell 0 1,grow");
-		panelMenu.setLayout(new MigLayout("", "[225px,grow]", "[][][229px,grow][]"));
+		panelMenu.setLayout(new MigLayout("", "[225px,grow]",
+				"[][][229px,grow][]"));
 
 		JPanel panelTools = new JPanel();
 		panelTools.setBorder(new TitledBorder(null, "Draw",
@@ -164,10 +167,37 @@ public class Layout implements ILayout {
 		drawButtons.add(tglbtnCurve);
 		panelTools.add(tglbtnCurve, "flowx,cell 3 0,alignx left,aligny top");
 
+		final JToggleButton tglbtnBSpline = new JToggleButton("");
+		tglbtnBSpline.setIcon(new ImageIcon("img/SplineControlPoints32.png"));
+		tglbtnBSpline.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String numControlDots = JOptionPane
+						.showInputDialog("Quantos pontos de controle você deseja utilizar?");
+				Pattern pattern = Pattern.compile("^\\d+$");
+				Matcher search = pattern.matcher(numControlDots);
+				int value = Integer.valueOf(numControlDots);
+				if (search.matches() && value >= 4) {
+					viewport.setNumControlDots(value);
+					for (JToggleButton jToggleButton : drawButtons) {
+						jToggleButton.setSelected(false);
+					}
+					tglbtnBSpline.setSelected(true);
+					viewport.setGraphicTool(Geometry.Type.BSPLINE);
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"Entre com um valor numérico e maior que 4!");
+					actionPerformed(e);
+				}
+			}
+
+		});
+		panelTools.add(tglbtnBSpline, "flowx,cell 4 0,alignx left,aligny top");
+
 		JPanel panelColors = new JPanel();
 		panelColors.setBorder(new TitledBorder(null, "Color",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panelTools.add(panelColors, "cell 0 1 4 1,grow");
+		panelTools.add(panelColors, "cell 0 1 5 1,grow");
 
 		JButton btnBlack = new JButton("");
 		btnBlack.setBackground(Color.BLACK);
@@ -206,6 +236,15 @@ public class Layout implements ILayout {
 		btnYellow.setBackground(Color.YELLOW);
 		panelColors.add(btnYellow);
 
+		JButton btnOrange = new JButton("");
+		btnOrange.setBackground(Color.ORANGE);
+		btnOrange.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.ORANGE);
+			}
+		});
+		panelColors.add(btnOrange);
+
 		JButton btnRed = new JButton("");
 		btnRed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -214,7 +253,7 @@ public class Layout implements ILayout {
 		});
 		btnRed.setBackground(Color.RED);
 		panelColors.add(btnRed);
-		
+
 		JButton btnPink = new JButton("");
 		btnPink.setBackground(Color.PINK);
 		btnPink.addActionListener(new ActionListener() {
@@ -223,7 +262,16 @@ public class Layout implements ILayout {
 			}
 		});
 		panelColors.add(btnPink);
-		
+
+		JButton btnMagenta = new JButton("");
+		btnMagenta.setBackground(Color.MAGENTA);
+		btnMagenta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				viewport.setColorTool(Color.MAGENTA);
+			}
+		});
+		panelColors.add(btnMagenta);
+
 		JButton btnGray = new JButton("");
 		btnGray.setBackground(Color.GRAY);
 		btnGray.addActionListener(new ActionListener() {
@@ -426,7 +474,8 @@ public class Layout implements ILayout {
 		panelWindow.setBorder(new TitledBorder(null, "Window",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelMenu.add(panelWindow, "cell 0 3,growx,aligny bottom");
-		panelWindow.setLayout(new MigLayout("", "[grow][][][][grow]", "[][][]"));
+		panelWindow
+				.setLayout(new MigLayout("", "[grow][][][][grow]", "[][][]"));
 
 		JButton btnZoomOut = new JButton("");
 		btnZoomOut.setIcon(new ImageIcon("img/zoom-out-icon.png"));
