@@ -128,4 +128,17 @@ public class DisplayFile {
 		Coordinate center = new Coordinate(x, y);
 		object.setCenter(center);
 	}
+
+	public void remove(String selected) {
+		int index = -1;
+		for (int i = 0; i < objects.size(); i++) {
+			if (objects.get(i).getName() == selected) {
+				index = i;
+				break;
+			}
+		}
+		if (index >= 0) {
+			objects.remove(index);
+		}
+	}
 }

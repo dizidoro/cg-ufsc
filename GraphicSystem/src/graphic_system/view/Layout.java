@@ -6,6 +6,7 @@ import graphic_system.model.Geometry;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -34,6 +35,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Layout implements ILayout {
 
@@ -290,9 +294,26 @@ public class Layout implements ILayout {
 
 		listObjects = new DefaultListModel<String>();
 		jListObjects = new JList<String>(listObjects);
+		jListObjects.addKeyListener(new KeyAdapter() {
+			@Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                	String selected = jListObjects.getSelectedValue();
+    				for (IGraphicSystem listener : listeners) {
+    					listener.removeObject(selected);
+    				}
+    				int index = jListObjects.getSelectedIndex();
+    				listObjects.removeElementAt(index);
+                	jListObjects.updateUI();
+                }
+            }
+		});
 		jListObjects.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				String selected = jListObjects.getSelectedValue();
+				if (selected == null) {
+					return;
+				}
 				for (IGraphicSystem listener : listeners) {
 					listener.getCenter(selected);
 				}

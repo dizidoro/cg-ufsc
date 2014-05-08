@@ -39,6 +39,12 @@ public class GraphicSystem implements IGraphicSystem {
 	}
 
 	@Override
+	public void removeObject(String selected) {
+		displayFile.remove(selected);
+		redraw();
+	}
+	
+	@Override
 	public void zoomIn() {
 		window.zoomIn();
 		redraw();

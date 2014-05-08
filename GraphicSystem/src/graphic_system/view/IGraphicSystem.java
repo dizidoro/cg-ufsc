@@ -6,6 +6,8 @@ import graphic_system.model.Geometry;
 public interface IGraphicSystem {
 
 	void addNewObject(Geometry object);
+	
+	void removeObject(String selected);
 
 	void moveUp();
 
