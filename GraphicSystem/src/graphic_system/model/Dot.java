@@ -58,18 +58,6 @@ public class Dot extends Geometry {
 		coordinate.transform(matrix);
 	}
 
-	@Override
-	public void transformSCN(double[][] matrix) {
-		coordinate.transformSCN(matrix);
-	}
-
-	@Override
-	public Dot getWindowViewportTransformationSCN(Window window,
-			Viewport viewport) {
-		Coordinate viewportCoordinate = coordinate
-				.getWindowViewportTransformationSCN(window, viewport);
-		return new Dot(this.getName(), viewportCoordinate, this.getColor());
-	}
 
 	@Override
 	protected Geometry getTransformed(double[][] transformationMatrix) {

@@ -121,23 +121,6 @@ public class Curve extends Geometry {
 		return new Curve(name, transformedVertices, color);
 	}
 
-	@Override
-	public void transformSCN(double[][] matrix) {
-		for (Coordinate vertice : coordinates) {
-			vertice.transformSCN(matrix);
-		}
-	}
-
-	@Override
-	public Geometry getWindowViewportTransformationSCN(Window window,
-			Viewport viewport) {
-		List<Coordinate> viewportVertices = new ArrayList<Coordinate>();
-		for (Coordinate vertice : coordinates) {
-			viewportVertices.add(vertice.getWindowViewportTransformationSCN(
-					window, viewport));
-		}
-		return new Curve(this.getName(), viewportVertices, this.getColor());
-	}
 
 	@Override
 	public Geometry getClipping(Window window) {

@@ -55,16 +55,6 @@ public class Polygon extends Geometry {
 		return new Coordinate(x, y);
 	}
 
-	// @Override
-	// public void setCenter(Coordinate center) {
-	// Coordinate oldCenter = getCenter();
-	// double xDiff = center.getX() - oldCenter.getX();
-	// double yDiff = center.getY() - oldCenter.getY();
-	// for (Coordinate vertice : vertices) {
-	// vertice.setX(vertice.getX() + xDiff);
-	// vertice.setY(vertice.getY() + yDiff);
-	// }
-	// }
 
 	@Override
 	public void setCenter(Coordinate center) {
@@ -82,18 +72,6 @@ public class Polygon extends Geometry {
 		vertices = transformedVertices;
 	}
 
-	// public double getArea() {
-	// int i, j;
-	// double area = 0;
-	// int points = vertices.size();
-	// for (i = 0; i < points; i++) {
-	// j = (i + 1) % points;
-	// area += vertices.get(i).getX() * vertices.get(j).getY();
-	// area -= vertices.get(i).getY() * vertices.get(j).getX();
-	// }
-	// area /= 2.0;
-	// return (Math.abs(area));
-	// }
 
 	@Override
 	public void scaleLess() {
@@ -131,23 +109,6 @@ public class Polygon extends Geometry {
 		vertices = this.getTransformedVertices(matrix);
 	}
 
-	@Override
-	public void transformSCN(double[][] matrix) {
-		for (Coordinate vertice : vertices) {
-			vertice.transformSCN(matrix);
-		}
-	}
-
-	@Override
-	public Geometry getWindowViewportTransformationSCN(Window window,
-			Viewport viewport) {
-		List<Coordinate> viewportVertices = new ArrayList<Coordinate>();
-		for (Coordinate vertice : vertices) {
-			viewportVertices.add(vertice.getWindowViewportTransformationSCN(
-					window, viewport));
-		}
-		return new Polygon(this.getName(), viewportVertices, this.getColor());
-	}
 
 	@Override
 	protected Geometry getTransformed(double[][] transformationMatrix) {
@@ -167,20 +128,64 @@ public class Polygon extends Geometry {
 		return transformedVertices;
 	}
 
+//	@Override
+//	public Geometry getClipping(Window window) {
+//		boolean inner = false;
+//		for (Coordinate vertice : vertices) {
+//			RegionCode code = vertice.getRegionCode(window);
+//			// TODO
+//			// Se tem um vértice dentro da window,
+//			// precisamos calcular o clipping
+//			if (code.all == 0) {
+//				inner = true;
+//				return this;
+//			}
+//		}
+//		return null;
+//	}
+	
 	@Override
 	public Geometry getClipping(Window window) {
-		boolean inner = false;
-		for (Coordinate vertice : vertices) {
-			RegionCode code = vertice.getRegionCode(window);
-			// TODO
-			// Se tem um vértice dentro da window,
-			// precisamos calcular o clipping
-			if (code.all == 0) {
-				inner = true;
-				return this;
+		//falta dividir em duas geometrias
+		Coordinate previousVertice = null;
+		List<Coordinate> clippedVertices = new ArrayList<>();
+		
+		for(Coordinate vertice : vertices){
+			if(previousVertice == null){
+				previousVertice = vertice;
+				continue;
 			}
+			
+			clipAndAdd(previousVertice, vertice, window, clippedVertices);
+
+			previousVertice = vertice;
 		}
-		return null;
+		
+		Coordinate vertice = vertices.get(0);
+		clipAndAdd(previousVertice, vertice, window, clippedVertices);
+		
+		return new Polygon(name, clippedVertices, color);
 	}
+	
+	private void clipAndAdd(Coordinate a, Coordinate b, Window window, List<Coordinate> clippedVertices){
+		RegionCode codeA = a.getRegionCode(window);
+		RegionCode codeB = b.getRegionCode(window);
+		
+		if(codeA.isInsideWindow() && codeB.isInsideWindow()){
+			clippedVertices.add(b);
+		} else if(codeA.isInsideWindow() && !codeB.isInsideWindow()){
+			Line line = new Line(a, b);
+			Line clippedLine = line.getClipping(window);
+			Coordinate clippedVertice = line.getB();
+			clippedVertices.add(clippedVertice);
+		} else if(!codeA.isInsideWindow() && codeB.isInsideWindow()) {
+			Line line = new Line(a, b);
+			Line clippedLine = line.getClipping(window);
+			Coordinate clippedVertice = line.getA();
+			clippedVertices.add(clippedVertice);
+			clippedVertices.add(b);				
+		}
+	}
+
 
 }

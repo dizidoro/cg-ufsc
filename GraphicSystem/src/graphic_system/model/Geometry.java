@@ -113,20 +113,6 @@ public abstract class Geometry {
 		return rotationMatrix;
 	}
 
-	public void rotateAntiClockwiseAroundPointSCN(Coordinate coordinate) {
-		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
-		this.transformSCN(rotationMatrix);
-	}
-
-	public abstract void transformSCN(double[][] rotationMatrix);
-
-	public void rotateClockwiseAroundPointSCN(Coordinate coordinate) {
-		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
-		this.transformSCN(rotationMatrix);
-	}
-
-	public abstract Geometry getWindowViewportTransformationSCN(Window window,
-			Viewport viewport);
 
 	public Geometry getRotatedAroundPoint(Coordinate coordinate, double angle) {
 		double[][] rotationMatrix = getRotationMatrix(coordinate, angle);

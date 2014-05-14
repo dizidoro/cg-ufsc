@@ -12,4 +12,8 @@ public class RegionCode {
 		all = 0;
 	}
 	
+	
+	public boolean isInsideWindow(){
+		return all == 0;
+	}
 }

@@ -20,8 +20,14 @@ public class Line extends Geometry {
 		lineCount++;
 	}
 
-	private Line(String name, Coordinate a, Coordinate b, Color color) {
+	public Line(String name, Coordinate a, Coordinate b, Color color) {
 		super(name, Geometry.Type.LINE, color);
+		this.a = a;
+		this.b = b;
+	}
+	
+	public Line(Coordinate a, Coordinate b) {
+		super("line", Geometry.Type.LINE, Color.black);
 		this.a = a;
 		this.b = b;
 	}
@@ -43,15 +49,7 @@ public class Line extends Geometry {
 		return new Line(this.getName(), viewportA, viewportB, this.getColor());
 	}
 
-	@Override
-	public Line getWindowViewportTransformationSCN(Window window,
-			Viewport viewport) {
-		Coordinate viewportA = a.getWindowViewportTransformationSCN(window,
-				viewport);
-		Coordinate viewportB = b.getWindowViewportTransformationSCN(window,
-				viewport);
-		return new Line(this.getName(), viewportA, viewportB, this.getColor());
-	}
+
 
 	@Override
 	public Coordinate getCenter() {
@@ -121,11 +119,6 @@ public class Line extends Geometry {
 		b.transform(matrix);
 	}
 
-	@Override
-	public void transformSCN(double[][] matrix) {
-		a.transformSCN(matrix);
-		b.transformSCN(matrix);
-	}
 
 	@Override
 	protected Geometry getTransformed(double[][] transformationMatrix) {
