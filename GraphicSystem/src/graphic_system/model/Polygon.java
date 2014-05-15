@@ -176,12 +176,12 @@ public class Polygon extends Geometry {
 		} else if(codeA.isInsideWindow() && !codeB.isInsideWindow()){
 			Line line = new Line(a, b);
 			Line clippedLine = line.getClipping(window);
-			Coordinate clippedVertice = line.getB();
+			Coordinate clippedVertice = clippedLine.getB();
 			clippedVertices.add(clippedVertice);
 		} else if(!codeA.isInsideWindow() && codeB.isInsideWindow()) {
 			Line line = new Line(a, b);
 			Line clippedLine = line.getClipping(window);
-			Coordinate clippedVertice = line.getA();
+			Coordinate clippedVertice = clippedLine.getA();
 			clippedVertices.add(clippedVertice);
 			clippedVertices.add(b);				
 		}

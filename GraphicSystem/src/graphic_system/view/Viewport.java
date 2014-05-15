@@ -134,7 +134,7 @@ public class Viewport extends JPanel {
 		// TODO: Tornar isso configurável
 		Graphics2D g2d = (Graphics2D) g;
 		g.setColor(colorTool);
-		g2d.setStroke(new BasicStroke(5, BasicStroke.CAP_ROUND,
+		g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_SQUARE,
 				BasicStroke.JOIN_BEVEL));
 
 		if (!objects.isEmpty() || redraw) {
@@ -154,7 +154,6 @@ public class Viewport extends JPanel {
 					Coordinate b = line.getB();
 					g.drawLine((int) a.getX(), (int) a.getY(), (int) b.getX(),
 							(int) b.getY());
-
 				} else if (object.getType().equals(Geometry.Type.POLYGON)) {
 					Polygon polygon = (Polygon) object;
 					ArrayList<Coordinate> coordinates = (ArrayList<Coordinate>) polygon
