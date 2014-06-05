@@ -16,7 +16,7 @@
     -->
     <!-- uncomment the above lines to use ANT outside of Eclipse -->
     <target name="main">
-        <fatjar.build output="GraphicSystem_DiegoWeiss_DiegoIzidoro_BSpline.jar">
+        <fatjar.build output="GraphicSystem_DiegoWeiss_DiegoIzidoro_Raster.jar">
             <fatjar.manifest mainclass="graphic_system.Main"/>
             <fatjar.filesource path="/home/diego/UFSC/Gráfica/trabalho1/computacao-grafica/GraphicSystem/bin" relpath=""/>
             <fatjar.jarsource file="/home/diego/UFSC/Gráfica/trabalho1/computacao-grafica/GraphicSystem/miglayout-src.zip" relpath=""/>
