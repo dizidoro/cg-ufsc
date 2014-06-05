@@ -1,6 +1,7 @@
 package graphic_system.view;
 
 import graphic_system.ApplicationConfig;
+import graphic_system.controller.FrameBuffer;
 import graphic_system.model.BSpline;
 import graphic_system.model.Coordinate;
 import graphic_system.model.Curve;
@@ -16,6 +17,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +25,9 @@ import java.util.List;
 import javax.swing.JPanel;
 
 public class Viewport extends JPanel {
+
+	private FrameBuffer frameBuffer = null;
+	private BufferedImage image;
 
 	public Viewport() {
 		double xMin = ApplicationConfig.initXMin;
@@ -33,7 +38,9 @@ public class Viewport extends JPanel {
 		int height = (int) (yMax - yMin);
 		int width = (int) (xMax - xMin);
 		this.setSize(width, height);
-		// this.setSize(800, 800);
+
+		frameBuffer = new FrameBuffer(width, height);
+		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 
 	/**
@@ -130,7 +137,6 @@ public class Viewport extends JPanel {
 
 	@Override
 	protected void paintComponent(Graphics g) {
-
 		// TODO: Tornar isso configurável
 		Graphics2D g2d = (Graphics2D) g;
 		g.setColor(colorTool);
@@ -139,21 +145,24 @@ public class Viewport extends JPanel {
 
 		if (!objects.isEmpty() || redraw) {
 			super.paintComponent(g);
+			frameBuffer.clear(Color.WHITE.getRGB());
 
 			for (Geometry object : objects) {
 				g.setColor(object.getColor());
 				if (object.getType().equals(Geometry.Type.POINT)) {
 					Dot dot = (Dot) object;
 					Coordinate coordinate = dot.getCoordinate();
-					g.drawLine((int) coordinate.getX(),
-							(int) coordinate.getY(), (int) coordinate.getX(),
-							(int) coordinate.getY());
+					frameBuffer.drawLine((int) coordinate.getX(),
+							(int) coordinate.getY(), dot.getColor().getRGB(),
+							(int) coordinate.getX(), (int) coordinate.getY(),
+							dot.getColor().getRGB());
 				} else if (object.getType().equals(Geometry.Type.LINE)) {
 					Line line = (Line) object;
 					Coordinate a = line.getA();
 					Coordinate b = line.getB();
-					g.drawLine((int) a.getX(), (int) a.getY(), (int) b.getX(),
-							(int) b.getY());
+					frameBuffer.drawLine((int) a.getX(), (int) a.getY(), line
+							.getColor().getRGB(), (int) b.getX(), (int) b
+							.getY(), line.getColor().getRGB());
 
 				} else if (object.getType().equals(Geometry.Type.POLYGON)) {
 					Polygon polygon = (Polygon) object;
@@ -168,7 +177,8 @@ public class Viewport extends JPanel {
 						xPoints[i] = (int) coordinate.getX();
 						yPoints[i] = (int) coordinate.getY();
 					}
-					g.drawPolygon(xPoints, yPoints, nPoints);
+					frameBuffer.drawPolygon(xPoints, yPoints, nPoints, polygon
+							.getColor().getRGB());
 				} else if (object.getType().equals(Geometry.Type.CURVE)) {
 					Curve curve = (Curve) object;
 					ArrayList<Coordinate> coordinates = (ArrayList<Coordinate>) curve
@@ -183,6 +193,8 @@ public class Viewport extends JPanel {
 			}
 			objects = Collections.emptyList();
 			redraw = false;
+
+			drawFrameBuffer(g);
 			return;
 		}
 
@@ -192,14 +204,16 @@ public class Viewport extends JPanel {
 		}
 
 		if (graphicTool.equals(Geometry.Type.POINT)) {
-			g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p1.getX(),
-					(int) p1.getY());
+			frameBuffer.drawLine((int) p1.getX(), (int) p1.getY(),
+					colorTool.getRGB(), (int) p1.getX(), (int) p1.getY(),
+					colorTool.getRGB());
 			System.out.println("Tool paint = (" + p1.getX() + "," + p1.getY()
 					+ ")");
 
 		} else if (graphicTool.equals(Geometry.Type.LINE)) {
-			g.drawLine((int) p1.getX(), (int) p1.getY(), (int) p2.getX(),
-					(int) p2.getY());
+			frameBuffer.drawLine((int) p1.getX(), (int) p1.getY(),
+					colorTool.getRGB(), (int) p2.getX(), (int) p2.getY(),
+					colorTool.getRGB());
 
 		} else if (graphicTool.equals(Geometry.Type.POLYGON)) {
 			int nPoints = polygonClicks.size();
@@ -210,7 +224,8 @@ public class Viewport extends JPanel {
 				xPoints[i] = (int) coordinate.getX();
 				yPoints[i] = (int) coordinate.getY();
 			}
-			g.drawPolygon(xPoints, yPoints, nPoints);
+			frameBuffer.drawPolygon(xPoints, yPoints, nPoints,
+					colorTool.getRGB());
 
 		} else if (graphicTool.equals(Geometry.Type.CURVE)) {
 			drawBezierCurve(g, curveClicks);
@@ -219,7 +234,18 @@ public class Viewport extends JPanel {
 			drawBSpline(g, bSplineClicks, this.numControlDots);
 			bSplineClicks.clear();
 		}
-
+		drawFrameBuffer(g);
+	}
+	
+	private void drawFrameBuffer(Graphics g) {
+		int height = frameBuffer.getHeight();
+		int width = frameBuffer.getWidth();
+		for (int i = 0; i < frameBuffer.getWidth(); i++) {
+			for (int j = 0; j < height; j++) {
+				image.setRGB(i, j, frameBuffer.getPixel(i, j));
+			}
+		}
+		g.drawImage(image, 0, 0, width, height, null);
 	}
 
 	private void drawBezierCurve(Graphics g, List<Coordinate> coordinates) {
@@ -273,8 +299,9 @@ public class Viewport extends JPanel {
 					xPrevious = x;
 					yPrevious = y;
 				} else {
-					g.drawLine((int) xPrevious, (int) yPrevious, (int) x,
-							(int) y);
+					frameBuffer.drawLine((int) xPrevious, (int) yPrevious,
+							colorTool.getRGB(), (int) x, (int) y,
+							colorTool.getRGB());
 					xPrevious = x;
 					yPrevious = y;
 				}
@@ -316,7 +343,9 @@ public class Viewport extends JPanel {
 				if (first) {
 					first = false;
 				} else {
-					g.drawLine((int) x0, (int) y0, (int) x, (int) y);
+					frameBuffer.drawLine((int) x0, (int) y0,
+							colorTool.getRGB(), (int) x, (int) y,
+							colorTool.getRGB());
 				}
 			}
 		}
