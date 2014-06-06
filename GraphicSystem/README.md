@@ -2,6 +2,7 @@ Raster
 ===================
 Implementada classe FrameBuffer para o sistema de rasterização que conta com as funções de desenhar pixel, linha, polígono, limpar buffer.
 Integrado com a classe Viewport.
+- TODO: Trapézio
 
 Bezier
 ===================
