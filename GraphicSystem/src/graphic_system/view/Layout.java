@@ -6,7 +6,8 @@ import graphic_system.model.Geometry;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,9 +36,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import net.miginfocom.swing.MigLayout;
-
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class Layout implements ILayout {
 
@@ -285,6 +283,42 @@ public class Layout implements ILayout {
 		});
 		panelColors.add(btnGray);
 
+		final JToggleButton tglbtnTriangle = new JToggleButton("");
+		tglbtnTriangle.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (JToggleButton jToggleButton : drawButtons) {
+					jToggleButton.setSelected(false);
+				}
+				tglbtnTriangle.setSelected(true);
+				viewport.setGraphicTool(Geometry.Type.TRIANGLE);
+			}
+		});
+		drawButtons.add(tglbtnTriangle);
+		tglbtnTriangle.setIcon(new ImageIcon("img/triangle-icon.png"));
+		panelTools.add(tglbtnTriangle, "cell 4 0 2 1");
+
+		final JButton btn3d = new JButton("");
+		// btn3d.addFocusListener(new FocusAdapter() {
+		// @Override
+		// public void focusLost(FocusEvent e) {
+		// appendFrame(viewport);
+		// }
+		// });
+		btn3d.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// for (JToggleButton jToggleButton : drawButtons) {
+				// jToggleButton.setSelected(false);
+				// }
+				// btn3d.setSelected(true);
+				for (IGraphicSystem listener : listeners) {
+					listener.zBufferSample();
+				}
+			}
+		});
+		btn3d.setIcon(new ImageIcon("img/3D-icon.png"));
+		panelTools.add(btn3d, "cell 4 0");
+		// drawButtons.add(btn3d);
+
 		JPanel panelObjects = new JPanel();
 		panelObjects.setBorder(new TitledBorder(new LineBorder(new Color(184,
 				207, 229)), "Objects", TitledBorder.LEADING, TitledBorder.TOP,
@@ -296,17 +330,17 @@ public class Layout implements ILayout {
 		jListObjects = new JList<String>(listObjects);
 		jListObjects.addKeyListener(new KeyAdapter() {
 			@Override
-            public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                	String selected = jListObjects.getSelectedValue();
-    				for (IGraphicSystem listener : listeners) {
-    					listener.removeObject(selected);
-    				}
-    				int index = jListObjects.getSelectedIndex();
-    				listObjects.removeElementAt(index);
-                	jListObjects.updateUI();
-                }
-            }
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+					String selected = jListObjects.getSelectedValue();
+					for (IGraphicSystem listener : listeners) {
+						listener.removeObject(selected);
+					}
+					int index = jListObjects.getSelectedIndex();
+					listObjects.removeElementAt(index);
+					jListObjects.updateUI();
+				}
+			}
 		});
 		jListObjects.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
@@ -350,7 +384,7 @@ public class Layout implements ILayout {
 		});
 
 		panelTranslation.add(txtX, "cell 1 0,growx");
-		txtX.setColumns(10);
+		txtX.setColumns(4);
 
 		JLabel lblY = new JLabel("Y:");
 		panelTranslation.add(lblY, "cell 2 0,alignx trailing");
@@ -362,7 +396,7 @@ public class Layout implements ILayout {
 			}
 		});
 		panelTranslation.add(txtY, "cell 3 0,growx");
-		txtY.setColumns(10);
+		txtY.setColumns(4);
 
 		JPanel panelScale = new JPanel();
 		panelScale.setBorder(new TitledBorder(null, "Scale",
@@ -426,14 +460,14 @@ public class Layout implements ILayout {
 
 		txtXRotation = new JTextField();
 		panelRotation.add(txtXRotation, "cell 0 2");
-		txtXRotation.setColumns(10);
+		txtXRotation.setColumns(4);
 
 		JLabel lblYRotation = new JLabel("Y:");
 		panelRotation.add(lblYRotation, "cell 0 2");
 
 		txtYRotation = new JTextField();
 		panelRotation.add(txtYRotation, "cell 0 2");
-		txtYRotation.setColumns(10);
+		txtYRotation.setColumns(4);
 
 		JButton btnLeft = new JButton("");
 		btnLeft.addActionListener(new ActionListener() {
@@ -653,5 +687,20 @@ public class Layout implements ILayout {
 	public void redraw(List<Geometry> objects) {
 		viewport.redraw(objects);
 	}
+
+	// private JPanel oldPanel;
+	// public void appendFrame(JPanel frame) {
+	// if (frame == viewport) {
+	// frmComputerGraphics.getContentPane().remove(oldPanel);
+	// } else {
+	// oldPanel = frame;
+	// frmComputerGraphics.getContentPane().remove(viewport);
+	// }
+	// frmComputerGraphics.getContentPane().add(frame, "cell 1 1,grow");
+	// frame.repaint();
+	// frame.repaint(100);
+	// frmComputerGraphics.repaint();
+	// frmComputerGraphics.setVisible(true);
+	// }
 
 }

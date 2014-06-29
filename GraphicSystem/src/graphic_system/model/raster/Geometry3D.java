@@ -1,12 +1,16 @@
-package graphic_system.model;
+package graphic_system.model.raster;
+
+import graphic_system.model.RegionCode;
+import graphic_system.model.Viewport;
+import graphic_system.model.Window;
 
 import java.awt.Color;
 
 import math.Matrix;
 
-public abstract class Geometry {
+public abstract class Geometry3D {
 
-	protected static final Coordinate origin = new Coordinate(0, 0);
+	protected static final Coordinate3D origin = new Coordinate3D(0, 0, 0);
 
 	private static final double CLOCKWISE_DEGREE = 10;
 	private static final double ANTI_CLOCKWISE_DEGREE = 350;
@@ -15,7 +19,7 @@ public abstract class Geometry {
 	protected final Type type;
 	protected Color color;
 
-	public Geometry(String name, Type type, Color color) {
+	public Geometry3D(String name, Type type, Color color) {
 		this.name = name;
 		this.type = type;
 		this.color = color;
@@ -41,12 +45,12 @@ public abstract class Geometry {
 		this.color = color;
 	}
 
-	public abstract Geometry getWindowViewportTransformation(Window window,
+	public abstract Geometry3D getWindowViewportTransformation(Window window,
 			Viewport viewport);
 
-	public abstract Coordinate getCenter();
+	public abstract Coordinate3D getCenter();
 
-	public abstract void setCenter(Coordinate center);
+	public abstract void setCenter(Coordinate3D center);
 
 	public abstract void scaleLess();
 
@@ -54,7 +58,7 @@ public abstract class Geometry {
 
 	protected abstract void transform(double[][] transformationMatrix);
 
-	protected abstract Geometry getTransformed(double[][] transformationMatrix);
+	protected abstract Geometry3D getTransformed(double[][] transformationMatrix);
 
 	public void rotateClockwiseAroundOrigin() {
 		this.rotateClockwiseAroundPoint(origin);
@@ -72,26 +76,26 @@ public abstract class Geometry {
 		this.rotateAntiClockwiseAroundPoint(getCenter());
 	}
 
-	public void rotateClockwiseAroundPoint(Coordinate coordinate) {
+	public void rotateClockwiseAroundPoint(Coordinate3D coordinate) {
 		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
 		this.transform(rotationMatrix);
 	}
 
-	public void rotateAntiClockwiseAroundPoint(Coordinate coordinate) {
+	public void rotateAntiClockwiseAroundPoint(Coordinate3D coordinate) {
 		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
 		this.transform(rotationMatrix);
 	}
 
-	private static double[][] getClockwiseRotationMatrix(Coordinate coordinate) {
+	private static double[][] getClockwiseRotationMatrix(Coordinate3D coordinate) {
 		return getRotationMatrix(coordinate, CLOCKWISE_DEGREE);
 	}
 
 	private static double[][] getAntiClockwiseRotationMatrix(
-			Coordinate coordinate) {
+			Coordinate3D coordinate) {
 		return getRotationMatrix(coordinate, ANTI_CLOCKWISE_DEGREE);
 	}
 
-	private static double[][] getRotationMatrix(Coordinate coordinate,
+	private static double[][] getRotationMatrix(Coordinate3D coordinate,
 			double angle) {
 		final double cos = Math.cos(Math.toRadians(angle));
 		final double sin = Math.sin(Math.toRadians(angle));
@@ -113,27 +117,28 @@ public abstract class Geometry {
 		return rotationMatrix;
 	}
 
-	public void rotateAntiClockwiseAroundPointSCN(Coordinate coordinate) {
+	public void rotateAntiClockwiseAroundPointSCN(Coordinate3D coordinate) {
 		double[][] rotationMatrix = getAntiClockwiseRotationMatrix(coordinate);
 		this.transformSCN(rotationMatrix);
 	}
 
 	public abstract void transformSCN(double[][] rotationMatrix);
 
-	public void rotateClockwiseAroundPointSCN(Coordinate coordinate) {
+	public void rotateClockwiseAroundPointSCN(Coordinate3D coordinate) {
 		double[][] rotationMatrix = getClockwiseRotationMatrix(coordinate);
 		this.transformSCN(rotationMatrix);
 	}
 
-	public abstract Geometry getWindowViewportTransformationSCN(Window window,
-			Viewport viewport);
+	public abstract Geometry3D getWindowViewportTransformationSCN(
+			Window window, Viewport viewport);
 
-	public Geometry getRotatedAroundPoint(Coordinate coordinate, double angle) {
+	public Geometry3D getRotatedAroundPoint(Coordinate3D coordinate,
+			double angle) {
 		double[][] rotationMatrix = getRotationMatrix(coordinate, angle);
 		return getTransformed(rotationMatrix);
 	}
 
-	public RegionCode getRegionCode(Coordinate coordinate, Window window) {
+	public RegionCode getRegionCode(Coordinate3D coordinate, Window window) {
 		RegionCode code = new RegionCode();
 		if (coordinate.getY() > window.getYMax()) {
 			code.top = 1;
@@ -152,6 +157,6 @@ public abstract class Geometry {
 		return code;
 	}
 
-	public abstract Geometry getClipping(Window window);
+	public abstract Geometry3D getClipping(Window window);
 
 }

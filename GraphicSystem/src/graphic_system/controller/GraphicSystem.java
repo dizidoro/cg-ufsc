@@ -1,6 +1,7 @@
 package graphic_system.controller;
 
 import graphic_system.ApplicationConfig;
+import graphic_system.controller.raster.ZBufferFrame;
 import graphic_system.model.Coordinate;
 import graphic_system.model.DisplayFile;
 import graphic_system.model.Geometry;
@@ -43,7 +44,7 @@ public class GraphicSystem implements IGraphicSystem {
 		displayFile.remove(selected);
 		redraw();
 	}
-	
+
 	@Override
 	public void zoomIn() {
 		window.zoomIn();
@@ -155,10 +156,10 @@ public class GraphicSystem implements IGraphicSystem {
 		window.rotateAntiClockwise();
 		redraw();
 	}
-	
+
 	private void redraw() {
-		DisplayFile rotatedWorld = displayFile.getRotatedClipped(window.getCenter(),
-				window.getAngle(), window);
+		DisplayFile rotatedWorld = displayFile.getRotatedClipped(
+				window.getCenter(), window.getAngle(), window);
 		DisplayFile viewportDisplayFile = rotatedWorld.getViewportDisplayFile(
 				window, viewport);
 		List<Geometry> objects = viewportDisplayFile.getObjects();
@@ -166,6 +167,11 @@ public class GraphicSystem implements IGraphicSystem {
 			System.out.println("-> " + object.getName());
 		}
 		gui.redraw(objects);
+	}
+
+	@Override
+	public void zBufferSample() {
+		new ZBufferFrame();
 	}
 
 	// private void redraw() {

@@ -45,4 +45,6 @@ public interface IGraphicSystem {
 
 	void rotateWindowLeft();
 
+	void zBufferSample();
+
 }

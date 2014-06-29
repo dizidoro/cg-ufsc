@@ -1,4 +1,4 @@
-package graphic_system.controller;
+package graphic_system.controller.raster;
 
 // Trabalho 2.1. Rasterização sem checagem de profundidade no SGI
 // Implementação de framebuffer com as funções de limpar o buffer,
@@ -46,6 +46,37 @@ public class FrameBuffer {
 
 	public int getPixel(int x, int y) {
 		return buffer[y * size + x];
+	}
+
+	public void drawTriangle(int[] xPoints, int[] yPoints, int nPoints,
+			int color) {
+		drawLine(xPoints[0], yPoints[0], color, xPoints[1], yPoints[1], color);
+		drawLine(xPoints[1], yPoints[1], color, xPoints[2], yPoints[2], color);
+		drawLine(xPoints[2], yPoints[2], color, xPoints[0], yPoints[0], color);
+
+		// Fill triangle
+		// int maxX = xPoints[0];
+		// int minX = xPoints[0];
+		// int maxY = yPoints[0];
+		// int minY = yPoints[0];
+		// for (int i = 0; i < 3; i++) {
+		// if (xPoints[i] > maxX) {
+		// maxX = xPoints[i];
+		// }
+		// if (xPoints[i] < minX) {
+		// minX = xPoints[i];
+		// }
+		// if (yPoints[i] > maxY) {
+		// maxY = yPoints[i];
+		// }
+		// if (yPoints[i] < minY) {
+		// minY = yPoints[i];
+		// }
+		// }
+		// for (int i = minY; i < maxY; i++) {
+		// drawLine(minX, i, color, maxX, i, color);
+		// }
+
 	}
 
 	public void drawLine(int x, int y, int color1, int x2, int y2, int color2) {
@@ -137,52 +168,5 @@ public class FrameBuffer {
 				| (b & 0xff);
 		return color;
 	}
-
-	// int nPoints = coordinates.size();
-	// int xPoints[] = new int[nPoints];
-	// int yPoints[] = new int[nPoints];
-	// for (int i = 0; i < nPoints; i++) {
-	// Coordinate coordinate = coordinates.get(i);
-	// xPoints[i] = (int) coordinate.getX();
-	// yPoints[i] = (int) coordinate.getY();
-	// }
-	// g.drawPolygon(xPoints, yPoints, nPoints);
-	//
-	//
-	// void drawPolygon(int[] xPoints, int[] yPoints, int nPoints) {
-	// for (int i = 1; i < nPoints; i++) {
-	// drawLine(xPoints[i - 1], yPoints[i - 1], Color.BLACK.getRGB(),
-	// xPoints[i], yPoints[i], Color.BLACK.getRGB());
-	// }
-	// }
-	// trabalho de rasterização
-	// void trapezio(Ax, Bx, ABy, Cx, Dx, CDy,
-	// CorA, CorB, CorC, CorD) {
-	// deltaXLeft = Cx - Ax;
-	// deltaXRight = Dx - Bx;
-	//
-	// y0 = ABy;
-	// y1 = CBy;
-	// for [y0 - y1] -> y {
-	// ty = (y - y0) / (y1 - y0)
-	// xLeft = deltaXLeft * ty + x0Left;
-	// xRight = deltaXRight * ty + xoRight;
-	// redLeft = deltaRedLeft * ty + red0Left;
-	// redRight = deltaRedRight * ty + red0Right;
-	// deltaRed = redRight - redLeft;
-	// // delta cor para fazer degradê
-	// for [xLeft, xRight] -> x {
-	// tx = (x - xLeft) / (xRight - xLeft);
-	// red = tx * deltaRed + redLeft;
-	// setPixel(x, y, cor);
-	// }
-	// }
-	// }
-	//
-	void triangulo() {
-
-	}
-
-	// coordenada baricêntrica
 
 }

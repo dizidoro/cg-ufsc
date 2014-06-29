@@ -1,3 +1,16 @@
+Implementação de um shader
+===================
+Para visualizar pressione o último ícone de desenho da esquerda para direita!
+
+Implementação de iluminação de phong
+===================
+Para visualizar pressione o último ícone de desenho da esquerda para direita!
+
+Z-Buffer
+===================
+Implementação de desenho de triângulo, implementação de checagem de profundidade.
+Para visualizar pressione o último ícone de desenho da esquerda para direita!
+
 Raster
 ===================
 Implementada classe FrameBuffer para o sistema de rasterização que conta com as funções de desenhar pixel, linha, polígono, limpar buffer.

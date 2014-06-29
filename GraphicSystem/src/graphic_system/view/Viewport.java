@@ -1,7 +1,7 @@
 package graphic_system.view;
 
 import graphic_system.ApplicationConfig;
-import graphic_system.controller.FrameBuffer;
+import graphic_system.controller.raster.FrameBuffer;
 import graphic_system.model.BSpline;
 import graphic_system.model.Coordinate;
 import graphic_system.model.Curve;
@@ -9,6 +9,7 @@ import graphic_system.model.Dot;
 import graphic_system.model.Geometry;
 import graphic_system.model.Line;
 import graphic_system.model.Polygon;
+import graphic_system.model.Triangle;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -53,6 +54,7 @@ public class Viewport extends JPanel {
 	private MouseHandlerPolygon mouseHandlerPolygon = new MouseHandlerPolygon();
 	private MouseHandlerCurve mouseHandlerCurve = new MouseHandlerCurve();
 	private MouseHandlerBSpline mouseHandlerBSpline = new MouseHandlerBSpline();
+	private MouseHandlerTriangle mouseHandlerTriangle = new MouseHandlerTriangle();
 	private MovingAdapter mouseDraggin = new MovingAdapter();
 
 	private Coordinate p1;
@@ -61,6 +63,7 @@ public class Viewport extends JPanel {
 	ArrayList<Coordinate> polygonClicks = new ArrayList<>();
 	ArrayList<Coordinate> curveClicks = new ArrayList<>();
 	ArrayList<Coordinate> bSplineClicks = new ArrayList<>();
+	ArrayList<Coordinate> triangleClicks = new ArrayList<>();
 
 	public int numControlDots = 4;
 
@@ -114,6 +117,8 @@ public class Viewport extends JPanel {
 			this.addMouseListener(mouseHandlerCurve);
 		} else if (graphicTool.equals(Geometry.Type.BSPLINE)) {
 			this.addMouseListener(mouseHandlerBSpline);
+		} else if (graphicTool.equals(Geometry.Type.TRIANGLE)) {
+			this.addMouseListener(mouseHandlerTriangle);
 		}
 	}
 
@@ -128,6 +133,8 @@ public class Viewport extends JPanel {
 			this.removeMouseListener(mouseHandlerCurve);
 		} else if (this.graphicTool.equals(Geometry.Type.BSPLINE)) {
 			this.removeMouseListener(mouseHandlerBSpline);
+		} else if (this.graphicTool.equals(Geometry.Type.TRIANGLE)) {
+			this.removeMouseListener(mouseHandlerTriangle);
 		}
 	}
 
@@ -189,6 +196,21 @@ public class Viewport extends JPanel {
 					ArrayList<Coordinate> coordinates = (ArrayList<Coordinate>) curve
 							.getCoordinates();
 					drawBSpline(g, coordinates, this.numControlDots);
+				} else if (object.getType().equals(Geometry.Type.TRIANGLE)) {
+					Triangle triangle = (Triangle) object;
+					ArrayList<Coordinate> coordinates = (ArrayList<Coordinate>) triangle
+							.getVertices();
+
+					int nPoints = coordinates.size();
+					int xPoints[] = new int[nPoints];
+					int yPoints[] = new int[nPoints];
+					for (int i = 0; i < nPoints; i++) {
+						Coordinate coordinate = coordinates.get(i);
+						xPoints[i] = (int) coordinate.getX();
+						yPoints[i] = (int) coordinate.getY();
+					}
+					frameBuffer.drawPolygon(xPoints, yPoints, nPoints, triangle
+							.getColor().getRGB());
 				}
 			}
 			objects = Collections.emptyList();
@@ -224,7 +246,7 @@ public class Viewport extends JPanel {
 				xPoints[i] = (int) coordinate.getX();
 				yPoints[i] = (int) coordinate.getY();
 			}
-			frameBuffer.drawPolygon(xPoints, yPoints, nPoints,
+			frameBuffer.drawTriangle(xPoints, yPoints, nPoints,
 					colorTool.getRGB());
 
 		} else if (graphicTool.equals(Geometry.Type.CURVE)) {
@@ -233,10 +255,25 @@ public class Viewport extends JPanel {
 		} else if (graphicTool.equals(Geometry.Type.BSPLINE)) {
 			drawBSpline(g, bSplineClicks, this.numControlDots);
 			bSplineClicks.clear();
+		} else if (graphicTool.equals(Geometry.Type.TRIANGLE)) {
+			int nPoints = triangleClicks.size();
+			if (nPoints == 0) {
+				return;
+			}
+			int xPoints[] = new int[nPoints];
+			int yPoints[] = new int[nPoints];
+			for (int i = 0; i < nPoints; i++) {
+				Coordinate coordinate = triangleClicks.get(i);
+				xPoints[i] = (int) coordinate.getX();
+				yPoints[i] = (int) coordinate.getY();
+			}
+			frameBuffer.drawTriangle(xPoints, yPoints, nPoints,
+					colorTool.getRGB());
+			triangleClicks.clear();
 		}
 		drawFrameBuffer(g);
 	}
-	
+
 	private void drawFrameBuffer(Graphics g) {
 		int height = frameBuffer.getHeight();
 		int width = frameBuffer.getWidth();
@@ -508,6 +545,32 @@ public class Viewport extends JPanel {
 			Point p = e.getPoint();
 			bSplineClicks.add(new Coordinate(p.x, p.y));
 		}
+	}
+
+	private class MouseHandlerTriangle extends MouseAdapter {
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("triangle: mouse clicked");
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("triangle: mouse pressed");
+
+			Point p = e.getPoint();
+			triangleClicks.add(new Coordinate(p.x, p.y));
+			if (triangleClicks.size() >= 3) {
+				Triangle triangle = new Triangle(triangleClicks, colorTool);
+				addNewObject(triangle);
+
+				repaint();
+
+			}
+
+		}
+
 	}
 
 	List<Geometry> objects = new ArrayList<>();

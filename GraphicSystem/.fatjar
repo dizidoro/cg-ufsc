@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Sat May 03 17:14:49 BRT 2014
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=GraphicSystem_fat.jar
+manifest.mergeall=true
+manifest.mainclass=graphic_system.Main
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

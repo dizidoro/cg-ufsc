@@ -2,9 +2,13 @@ package graphic_system.model;
 
 public class RegionCode {
 	
-	int top, bottom, right, left, all;
+	public int top;
+	public int bottom;
+	public int right;
+	public int left;
+	public int all;
 	
-	RegionCode() {
+	public RegionCode() {
 		top = 0;
 		bottom = 0;
 		right = 0;
